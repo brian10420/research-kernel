@@ -1,0 +1,99 @@
+# claude_research_team
+
+**A multi-role Claude Code research team for ML research projects — 6 skills,
+4 subagents, and a roster contract.** MIT-licensed templates distilled from a
+working solo-research setup.
+
+## Why roles?
+
+One assistant doing everything means the author reviews their own bugs, the
+reviewer knows the authors' intent, and every session re-derives context. This
+team splits the work by **context posture**: *skills* load into your current
+conversation (collaborate — design, code, analysis, writing, teaching), while
+*subagents* run isolated (dispatch-and-report — independent review,
+certification, mechanical ops). Independence is a feature you configure, not a
+vibe you hope for.
+
+## The team
+
+| # | Role | Kind | What it's for |
+|---|------|------|----------------|
+| 1 | `math-reviewer` | skill | verify math, shapes, derivations — never implements |
+| 2 | `dl-engineer` | skill | write/debug model + training code — never self-certifies |
+| 3 | `research-mentor` | skill | direction debates; verifies claims against the literature |
+| 4 | `blind-reviewer` | subagent | memoryless peer-review panel — sees only the PDF |
+| 5 | `repo-maintainer` | subagent | git/GitHub with an enforced never-push list |
+| 6 | `experiment-runner` | subagent | campaigns, GPU babysitting, no cherry-picking |
+| 7 | `results-analyst` | skill | publication-grade stats + figures, honesty doctrine |
+| 8 | `regression-guardian` | subagent | independent silent-bug gate; writes missing tests |
+| 9 | `paper-writer` | skill | manuscript revision + compile, honest-framing guardrails |
+| 10 | `study-coach` | skill | teaches YOU your own project — persistent Study Log, quizzes |
+
+Full roster contract with model routing and boundaries: [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md).
+Design rationale (why author ≠ certifier, why the reviewer stays blind, the
+memory-wins rule): [`docs/design-notes.md`](docs/design-notes.md).
+
+## Install
+
+```bash
+git clone https://github.com/brian10420/claude_research_team
+cp -r claude_research_team/skills  your-project/.claude/skills
+cp -r claude_research_team/agents  your-project/.claude/agents
+cp    claude_research_team/RESEARCH_TEAM.md your-project/.claude/
+```
+
+Then do the **fill-in pass** — every project-specific slot is marked
+`<placeholder>` or `<!-- PROJECT-SPECIFIC -->`:
+
+```bash
+grep -rn "PROJECT-SPECIFIC" your-project/.claude/
+```
+
+Per-file guidance: [`docs/customization.md`](docs/customization.md). Adjust
+each agent's `model:`/`tools:` frontmatter to your plan.
+
+## The study-coach ecosystem
+
+The newest role: a tutor that keeps a persistent Study Log (curriculum arcs,
+quiz results, weak-spot review queue) so learning survives across sessions —
+built for "I can run my experiments, now I need to *defend* them" moments.
+Seed your log from [`templates/STUDY_LOG_TEMPLATE.md`](templates/STUDY_LOG_TEMPLATE.md);
+open lanes with [`templates/session-handoff-prompt.md`](templates/session-handoff-prompt.md).
+
+## How these were built
+
+Skill files are process documentation, and process documentation lies unless
+tested. The study-coach was built RED→GREEN: baseline agent observed failing
+(expert-density walls, trap quizzes, no persistence), skill written as a
+positive session contract against that exact failure, then verified. The
+story, and when to scale the ceremony up or down:
+[`docs/creating-skills-with-tdd.md`](docs/creating-skills-with-tdd.md).
+
+## Companion third-party skills (not vendored — install from upstream)
+
+This team pairs well with, and was developed alongside:
+
+- [mattpocock/skills](https://github.com/mattpocock/skills) — `tdd`,
+  `diagnose`, `grill-me`, `grill-with-docs`, `caveman`, `prototype`,
+  `zoom-out`, `to-prd`, `to-issues`
+- [vercel-labs/skills](https://github.com/vercel-labs/skills) — the skills CLI
+  and `find-skills`
+- [Anthropic superpowers plugin](https://github.com/anthropics/claude-code) —
+  `writing-skills` powered the TDD process above
+
+None of their code is copied here; all attribution and licensing remain
+theirs.
+
+## What was removed (honesty note)
+
+These are scrubbed versions of a working configuration from an active,
+unpublished ML research project (audio / affective computing). Every metric
+value, dataset specific, campaign name, file inventory, and personal detail
+was replaced with placeholders or invented generic examples. The **structure
+and doctrine are real and battle-tested; the numbers are yours to fill in.**
+
+*Last synced from the private originals: 2026-08-27.*
+
+## License
+
+MIT © [Ting-Yi Lin](https://github.com/brian10420)
