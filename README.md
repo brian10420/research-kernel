@@ -4,6 +4,39 @@
 4 subagents, and a roster contract.** MIT-licensed templates distilled from a
 working solo-research setup.
 
+## The team at a glance
+
+![How the team works with you: six skills share your session context; four subagents run isolated behind a context boundary](assets/team-map.svg)
+
+**In one sentence:** six skills sit *inside* your conversation and see
+everything you see, four subagents work *outside* it — you send a task brief
+across the boundary, they send back one report — and every hand-off passes
+through you.
+
+### Reading the map in detail
+
+- **Enclosure is the message.** The two tinted zones are the diagram's core
+  claim: left = one shared context (the skills collaborate with your full
+  conversation), right = isolated contexts (the subagents never see it). No
+  agent talks to another directly — the map has no agent-to-agent edge at all.
+- **The dispatch bus crosses the boundary exactly twice**, labeled `task
+  brief` (out) and `one report` (back). That two-arrow interface is the whole
+  contract with an isolated role.
+- **The hexagon is the gate.** `regression-guardian` is the only hexagon and
+  the only amber on the page: after any risky code change it independently
+  certifies (✓) or sends the work back (✗ — through you) — the author never
+  certifies their own change.
+- **Line grammar:** solid arrow = a hand-off carrying work; thin plain line =
+  membership (nothing moves); dashed = the context boundary, and nothing else
+  is ever dashed.
+- **Names tell you the mechanism:** a leading `/` means an in-session skill
+  you invoke in the conversation; no slash + a doubled left edge means a
+  dispatched, isolated subagent. Small tags carry each role's hard rule
+  (`PDF only`, `never-push list`, `GPU · never cherry-picks`, `Study Log`).
+- The three standard workflows this team runs (build-and-test, paper,
+  learning) are written out step-by-step in
+  [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md#typical-flows).
+
 ## Why roles?
 
 One assistant doing everything means the author reviews their own bugs, the
