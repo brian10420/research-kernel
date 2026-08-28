@@ -33,9 +33,14 @@ through you.
   you invoke in the conversation; no slash + a doubled left edge means a
   dispatched, isolated subagent. Small tags carry each role's hard rule
   (`PDF only`, `never-push list`, `GPU · never cherry-picks`, `Study Log`).
-- The three standard workflows this team runs (build-and-test, paper,
-  learning) are written out step-by-step in
-  [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md#typical-flows).
+### The three workflows
+
+![The three workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, and the learning cycle back into the Study Log](assets/team-flows.svg)
+
+*Build-and-test runs through the amber gate (with the ✗-reject loop back to
+`/dl-engineer`); the paper loop hands the blind reviewer only the PDF; learning
+cycles back into the Study Log so the next session starts where this one ended.
+Text versions live in [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md#typical-flows).*
 
 ## Why roles?
 

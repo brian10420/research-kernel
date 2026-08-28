@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="700" viewBox="0 0 1320 700" role="img" aria-label="The three workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, and the learning cycle back into the Study Log.">
+  <defs>
+    <marker id="fh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#435954"/>
+    </marker>
+  </defs>
+  <style>
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .sans { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  </style>
+
+  <rect x="0" y="0" width="1320" height="700" fill="#F3F5F4"/>
+  <text class="sans" x="36" y="58" font-size="26" font-weight="700" fill="#1D2523">The three workflows</text>
+  <text class="sans" x="36" y="82" font-size="13.5" fill="#5A6663">Same glyphs as the map. Numbered steps — every one passes through you.</text>
+
+  <!-- lane 1 -->
+  <rect x="36" y="100" width="1248" height="180" rx="10" fill="#FFFFFF" stroke="#D3DAD7"/>
+  <rect x="36" y="100" width="120" height="180" rx="10" fill="#E7EDEA"/>
+  <rect x="96" y="100" width="60" height="180" fill="#E7EDEA"/>
+  <text class="sans" font-size="14" font-weight="700" fill="#1D2523" text-anchor="middle">
+    <tspan x="96" y="184">Build &amp; test</tspan><tspan x="96" y="202">an idea</tspan>
+  </text>
+  <g class="mono" font-size="11" font-weight="600">
+    <rect x="180" y="178" width="120" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="240" y="197" text-anchor="middle" fill="#1D2523">/research-mentor</text>
+    <circle cx="319" cy="170" r="8" fill="#1D2523"/><text x="319" y="173.5" font-size="10" text-anchor="middle" fill="#F3F5F4">1</text>
+    <line x1="308" y1="193" x2="326" y2="193" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="338" y="178" width="106" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="391" y="197" text-anchor="middle" fill="#1D2523">/math-reviewer</text>
+    <circle cx="463" cy="170" r="8" fill="#1D2523"/><text x="463" y="173.5" font-size="10" text-anchor="middle" fill="#F3F5F4">2</text>
+    <line x1="452" y1="193" x2="470" y2="193" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="482" y="178" width="93" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="528.5" y="197" text-anchor="middle" fill="#1D2523">/dl-engineer</text>
+    <circle cx="594" cy="170" r="8" fill="#1D2523"/><text x="594" y="173.5" font-size="10" text-anchor="middle" fill="#F3F5F4">3</text>
+    <line x1="583" y1="193" x2="601" y2="193" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <polygon points="628,176 768,176 783,193 768,210 628,210 613,193" fill="#A9761C"/>
+    <polygon points="629.5,178 766.8,178 779.6,193 766.8,208 629.5,208 616.4,193" fill="#FBF4E4"/>
+    <text x="698" y="197" text-anchor="middle" fill="#1D2523">regression-guardian</text>
+    <circle cx="802" cy="170" r="8" fill="#1D2523"/><text x="802" y="173.5" font-size="10" text-anchor="middle" fill="#F3F5F4">4</text>
+    <line x1="791" y1="193" x2="809" y2="193" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="821" y="178" width="126" height="30" rx="8" fill="#FDFEFD" stroke="#41507A" stroke-width="1.5"/>
+    <line x1="825" y1="181" x2="825" y2="205" stroke="#41507A" stroke-width="1.5"/><line x1="828" y1="181" x2="828" y2="205" stroke="#41507A" stroke-width="1.5"/>
+    <text x="886" y="197" text-anchor="middle" fill="#1D2523">experiment-runner</text>
+    <circle cx="966" cy="170" r="8" fill="#1D2523"/><text x="966" y="173.5" font-size="10" text-anchor="middle" fill="#F3F5F4">5</text>
+    <line x1="955" y1="193" x2="973" y2="193" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="985" y="178" width="120" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="1045" y="197" text-anchor="middle" fill="#1D2523">/results-analyst</text>
+    <circle cx="1124" cy="170" r="8" fill="#1D2523"/><text x="1124" y="173.5" font-size="10" text-anchor="middle" fill="#F3F5F4">6</text>
+    <line x1="1113" y1="193" x2="1131" y2="193" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="1143" y="178" width="113" height="30" rx="8" fill="#FDFEFD" stroke="#41507A" stroke-width="1.5"/>
+    <line x1="1147" y1="181" x2="1147" y2="205" stroke="#41507A" stroke-width="1.5"/><line x1="1150" y1="181" x2="1150" y2="205" stroke="#41507A" stroke-width="1.5"/>
+    <text x="1199.5" y="197" text-anchor="middle" fill="#1D2523">repo-maintainer</text>
+  </g>
+  <text class="mono" x="1256" y="242" font-size="10.5" text-anchor="end" fill="#A9761C">✗ reject → back to /dl-engineer (through you), then the gate runs again</text>
+
+  <!-- lane 2 -->
+  <rect x="36" y="300" width="1248" height="180" rx="10" fill="#FFFFFF" stroke="#D3DAD7"/>
+  <rect x="36" y="300" width="120" height="180" rx="10" fill="#E7EDEA"/>
+  <rect x="96" y="300" width="60" height="180" fill="#E7EDEA"/>
+  <text class="sans" font-size="14" font-weight="700" fill="#1D2523" text-anchor="middle">
+    <tspan x="96" y="384">Write the</tspan><tspan x="96" y="402">paper</tspan>
+  </text>
+  <g class="mono" font-size="11" font-weight="600">
+    <rect x="180" y="378" width="120" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="240" y="397" text-anchor="middle" fill="#1D2523">/research-mentor</text>
+    <circle cx="319" cy="370" r="8" fill="#1D2523"/><text x="319" y="373.5" font-size="10" text-anchor="middle" fill="#F3F5F4">1</text>
+    <line x1="308" y1="393" x2="326" y2="393" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="338" y="378" width="120" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="398" y="397" text-anchor="middle" fill="#1D2523">/results-analyst</text>
+    <circle cx="477" cy="370" r="8" fill="#1D2523"/><text x="477" y="373.5" font-size="10" text-anchor="middle" fill="#F3F5F4">2</text>
+    <line x1="466" y1="393" x2="484" y2="393" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="496" y="378" width="100" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="546" y="397" text-anchor="middle" fill="#1D2523">/paper-writer</text>
+    <circle cx="615" cy="370" r="8" fill="#1D2523"/><text x="615" y="373.5" font-size="10" text-anchor="middle" fill="#F3F5F4">3</text>
+    <line x1="604" y1="393" x2="622" y2="393" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="634" y="378" width="106" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="687" y="397" text-anchor="middle" fill="#1D2523">/math-reviewer</text>
+    <circle cx="759" cy="370" r="8" fill="#1D2523"/><text x="759" y="373.5" font-size="10" text-anchor="middle" fill="#F3F5F4">4</text>
+    <line x1="748" y1="393" x2="766" y2="393" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="778" y="378" width="172" height="30" rx="8" fill="#FDFEFD" stroke="#41507A" stroke-width="1.5"/>
+    <line x1="782" y1="381" x2="782" y2="405" stroke="#41507A" stroke-width="1.5"/><line x1="785" y1="381" x2="785" y2="405" stroke="#41507A" stroke-width="1.5"/>
+    <text x="864" y="397" text-anchor="middle" fill="#1D2523">blind-reviewer <tspan fill="#A9761C">· PDF only</tspan></text>
+    <circle cx="969" cy="370" r="8" fill="#1D2523"/><text x="969" y="373.5" font-size="10" text-anchor="middle" fill="#F3F5F4">5</text>
+    <line x1="958" y1="393" x2="976" y2="393" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="988" y="378" width="100" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="1038" y="397" text-anchor="middle" fill="#1D2523">/paper-writer</text>
+    <circle cx="1107" cy="370" r="8" fill="#1D2523"/><text x="1107" y="373.5" font-size="10" text-anchor="middle" fill="#F3F5F4">6</text>
+    <line x1="1096" y1="393" x2="1114" y2="393" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="1126" y="378" width="113" height="30" rx="8" fill="#FDFEFD" stroke="#41507A" stroke-width="1.5"/>
+    <line x1="1130" y1="381" x2="1130" y2="405" stroke="#41507A" stroke-width="1.5"/><line x1="1133" y1="381" x2="1133" y2="405" stroke="#41507A" stroke-width="1.5"/>
+    <text x="1182.5" y="397" text-anchor="middle" fill="#1D2523">repo-maintainer</text>
+  </g>
+
+  <!-- lane 3 -->
+  <rect x="36" y="500" width="1248" height="180" rx="10" fill="#FFFFFF" stroke="#D3DAD7"/>
+  <rect x="36" y="500" width="120" height="180" rx="10" fill="#E7EDEA"/>
+  <rect x="96" y="500" width="60" height="180" fill="#E7EDEA"/>
+  <text class="sans" font-size="14" font-weight="700" fill="#1D2523" text-anchor="middle">
+    <tspan x="96" y="584">Learn your</tspan><tspan x="96" y="602">own results</tspan>
+  </text>
+  <g class="mono" font-size="11" font-weight="600">
+    <rect x="180" y="575" width="74" height="30" rx="8" fill="#FBFCFB" stroke="#D3DAD7"/>
+    <text x="217" y="594" text-anchor="middle" fill="#5A6663">Study Log</text>
+    <circle cx="273" cy="567" r="8" fill="#1D2523"/><text x="273" y="570.5" font-size="10" text-anchor="middle" fill="#F3F5F4">1</text>
+    <line x1="262" y1="590" x2="280" y2="590" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="292" y="575" width="199" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="391.5" y="594" text-anchor="middle" fill="#1D2523">/study-coach teaches one topic</text>
+    <circle cx="510" cy="567" r="8" fill="#1D2523"/><text x="510" y="570.5" font-size="10" text-anchor="middle" fill="#F3F5F4">2</text>
+    <line x1="499" y1="590" x2="517" y2="590" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <circle cx="553" cy="590" r="24" fill="#0F6B62"/>
+    <text class="sans" x="553" y="594" font-size="12" font-weight="700" text-anchor="middle" fill="#F3F5F4">YOU</text>
+    <circle cx="596" cy="567" r="8" fill="#1D2523"/><text x="596" y="570.5" font-size="10" text-anchor="middle" fill="#F3F5F4">3</text>
+    <line x1="585" y1="590" x2="603" y2="590" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="615" y="575" width="159" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="694.5" y="594" text-anchor="middle" fill="#1D2523">quiz — graded honestly</text>
+  </g>
+  <polyline points="694,605 694,644 217,644 217,608" fill="none" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+  <circle cx="420" cy="644" r="8" fill="#1D2523"/><text class="mono" x="420" y="647.5" font-size="10" font-weight="600" text-anchor="middle" fill="#F3F5F4">4</text>
+  <rect x="436" y="636" width="122" height="16" rx="4" fill="#FFFFFF"/>
+  <text class="mono" x="497" y="647.5" font-size="10.5" text-anchor="middle" fill="#435954">Study Log updated</text>
+</svg>
