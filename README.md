@@ -1,14 +1,14 @@
 # claude_research_team
 
-**A multi-role Claude Code research team for ML research projects — 6 skills,
+**A multi-role Claude Code research team for ML research projects — 7 skills,
 4 subagents, and a roster contract.** MIT-licensed templates distilled from a
 working solo-research setup.
 
 ## The team at a glance
 
-![How the team works with you: six skills share your session context; four subagents run isolated behind a context boundary](assets/team-map.svg)
+![How the team works with you: seven skills share your session context; four subagents run isolated behind a context boundary](assets/team-map.svg)
 
-**In one sentence:** six skills sit *inside* your conversation and see
+**In one sentence:** seven skills sit *inside* your conversation and see
 everything you see, four subagents work *outside* it — you send a task brief
 across the boundary, they send back one report — and every hand-off passes
 through you.
@@ -32,15 +32,19 @@ through you.
 - **Names tell you the mechanism:** a leading `/` means an in-session skill
   you invoke in the conversation; no slash + a doubled left edge means a
   dispatched, isolated subagent. Small tags carry each role's hard rule
-  (`PDF only`, `never-push list`, `GPU · never cherry-picks`, `Study Log`).
-### The three workflows
+  (`PDF only`, `never-push list`, `GPU · never cherry-picks`, `Study Log`,
+  `brief first`).
+### The four workflows
 
-![The three workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, and the learning cycle back into the Study Log](assets/team-flows.svg)
+![The four workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, the learning cycle back into the Study Log, and the presenting lane from verified numbers to a rehearsed deck](assets/team-flows.svg)
 
 *Build-and-test runs through the amber gate (with the ✗-reject loop back to
 `/dl-engineer`); the paper loop hands the blind reviewer only the PDF; learning
-cycles back into the Study Log so the next session starts where this one ended.
-Text versions live in [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md#typical-flows).*
+cycles back into the Study Log so the next session starts where this one ended;
+and in the Present lane, verified numbers from `/results-analyst` go to
+`/science-presenter`, which asks a blocking audience brief before it builds
+anything — for a defense, `/study-coach` runs the rehearsal. Text versions
+live in [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md#typical-flows).*
 
 ## Why roles?
 
@@ -66,6 +70,7 @@ vibe you hope for.
 | 8 | `regression-guardian` | subagent | independent silent-bug gate; writes missing tests |
 | 9 | `paper-writer` | skill | manuscript revision + compile, honest-framing guardrails |
 | 10 | `study-coach` | skill | teaches YOU your own project — persistent Study Log, quizzes |
+| 11 | `science-presenter` | skill | audience-facing decks/posters — blocking brief, analogy-before-math, never inflates |
 
 Full roster contract with model routing and boundaries: [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md).
 Design rationale (why author ≠ certifier, why the reviewer stays blind, the
@@ -92,11 +97,24 @@ each agent's `model:`/`tools:` frontmatter to your plan.
 
 ## The study-coach ecosystem
 
-The newest role: a tutor that keeps a persistent Study Log (curriculum arcs,
+A tutor that keeps a persistent Study Log (curriculum arcs,
 quiz results, weak-spot review queue) so learning survives across sessions —
 built for "I can run my experiments, now I need to *defend* them" moments.
 Seed your log from [`templates/STUDY_LOG_TEMPLATE.md`](templates/STUDY_LOG_TEMPLATE.md);
 open lanes with [`templates/session-handoff-prompt.md`](templates/session-handoff-prompt.md).
+
+## The science-presenter (newest role)
+
+The outward-facing lane: turns your results into what outsiders actually
+absorb — animated HTML decks, design-canvas posters, one-pagers. Its contract
+is the interesting part: a **blocking audience brief** before any design work
+("tomorrow" doesn't waive it), a **pre-flight scan** that verifies every
+source figure/number file on disk before anything is embedded, an
+**analogy → picture → full math** ramp (math may move to backup slides, never
+vanishes), and an honesty rail under which simplification may omit but never
+inflate. It builds what you show; the study-coach preps *you* — for a defense,
+one makes the deck, the other runs the rehearsal. Log deliveries via
+[`templates/PRESENTATION_LOG_TEMPLATE.md`](templates/PRESENTATION_LOG_TEMPLATE.md).
 
 ## How these were built
 
@@ -104,7 +122,10 @@ Skill files are process documentation, and process documentation lies unless
 tested. The study-coach was built RED→GREEN: baseline agent observed failing
 (expert-density walls, trap quizzes, no persistence), skill written as a
 positive session contract against that exact failure, then verified. The
-story, and when to scale the ceremony up or down:
+science-presenter repeated the loop: the baseline refused to block on the
+audience question and shipped a jargon deck for an assumed venue; the skill
+pins the brief as a blocking gate and was verified to hold it under time
+pressure. The story, and when to scale the ceremony up or down:
 [`docs/creating-skills-with-tdd.md`](docs/creating-skills-with-tdd.md).
 
 ## Companion third-party skills (not vendored — install from upstream)
@@ -130,7 +151,7 @@ value, dataset specific, campaign name, file inventory, and personal detail
 was replaced with placeholders or invented generic examples. The **structure
 and doctrine are real and battle-tested; the numbers are yours to fill in.**
 
-*Last synced from the private originals: 2026-08-27.*
+*Last synced from the private originals: 2026-08-31.*
 
 ## License
 

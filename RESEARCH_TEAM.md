@@ -20,6 +20,7 @@ mechanisms with different context postures:
 | 8 | `regression-guardian` | **Subagent** | inherit | certify a change didn't silently break correctness | **independence = the point** |
 | 9 | `paper-writer` | Skill | session | discuss + revise manuscript prose + compile the PDF | content-revision lane = main session |
 | 10 | `study-coach` | Skill | session | be TAUGHT: guided study of your own notes, reading recommendations, quizzes | teaching lane; persistent Study Log |
+| 11 | `science-presenter` | Skill | session | turn results into audience-facing decks, posters, plain-language explanations | needs full context + in-session artifact tooling to stay honest |
 
 **Model routing (cheap-reality doctrine):** skills run in-session → they use
 whatever model the session runs. A team like this may be *optimized by* a
@@ -50,6 +51,15 @@ the main session can answer by reading the report.
 - **`study-coach` vs `math-reviewer`**: the coach *teaches* established
   material (you learn); the reviewer *verifies* new material (the work is
   checked). The coach never certifies correctness and never builds.
+- **`science-presenter` vs `results-analyst`**: one makes *publication*
+  figures (rigor for reviewers, saved where the manuscript expects); the
+  other makes *audience* visuals (decks/posters for people who did not live
+  the project). The presenter never computes a new statistic — a missing
+  number is a request to the analyst.
+- **`science-presenter` vs `study-coach`**: the coach trains *you* to explain
+  and defend the work yourself; the presenter builds the *artifact you show*.
+  Defense prep: the presenter makes the deck + backup-math slides, the coach
+  runs the rehearsal.
 
 ## Two hard rules baked into the team
 
@@ -87,3 +97,7 @@ again (`paper-writer`) → commit (`repo-maintainer`, never-push list enforced).
 
 **Learning:** open a study session (`study-coach`) → it reads your Study Log →
 teaches one topic from your own notes → quizzes you → updates the log.
+
+**Present:** verified numbers/figures (`results-analyst` sources) → audience
+brief + pre-flight source scan + build the deck/poster (`science-presenter`) →
+for a defense, rehearse it (`study-coach`).

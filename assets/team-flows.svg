@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="700" viewBox="0 0 1320 700" role="img" aria-label="The three workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, and the learning cycle back into the Study Log.">
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="900" viewBox="0 0 1320 900" role="img" aria-label="The four workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, the learning cycle back into the Study Log, and the presenting lane from verified numbers to a rehearsed deck.">
   <defs>
     <marker id="fh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 1 L 9 5 L 0 9 z" fill="#435954"/>
@@ -9,8 +9,8 @@
     .sans { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
   </style>
 
-  <rect x="0" y="0" width="1320" height="700" fill="#F3F5F4"/>
-  <text class="sans" x="36" y="58" font-size="26" font-weight="700" fill="#1D2523">The three workflows</text>
+  <rect x="0" y="0" width="1320" height="900" fill="#F3F5F4"/>
+  <text class="sans" x="36" y="58" font-size="26" font-weight="700" fill="#1D2523">The four workflows</text>
   <text class="sans" x="36" y="82" font-size="13.5" fill="#5A6663">Same glyphs as the map. Numbered steps — every one passes through you.</text>
 
   <!-- lane 1 -->
@@ -118,4 +118,37 @@
   <circle cx="420" cy="644" r="8" fill="#1D2523"/><text class="mono" x="420" y="647.5" font-size="10" font-weight="600" text-anchor="middle" fill="#F3F5F4">4</text>
   <rect x="436" y="636" width="122" height="16" rx="4" fill="#FFFFFF"/>
   <text class="mono" x="497" y="647.5" font-size="10.5" text-anchor="middle" fill="#435954">Study Log updated</text>
+
+  <!-- lane 4 -->
+  <rect x="36" y="700" width="1248" height="180" rx="10" fill="#FFFFFF" stroke="#D3DAD7"/>
+  <rect x="36" y="700" width="120" height="180" rx="10" fill="#E7EDEA"/>
+  <rect x="96" y="700" width="60" height="180" fill="#E7EDEA"/>
+  <text class="sans" font-size="14" font-weight="700" fill="#1D2523" text-anchor="middle">
+    <tspan x="96" y="784">Present it</tspan><tspan x="96" y="802">to others</tspan>
+  </text>
+  <g class="mono" font-size="11" font-weight="600">
+    <rect x="180" y="778" width="120" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="240" y="797" text-anchor="middle" fill="#1D2523">/results-analyst</text>
+    <circle cx="319" cy="770" r="8" fill="#1D2523"/><text x="319" y="773.5" font-size="10" text-anchor="middle" fill="#F3F5F4">1</text>
+    <line x1="308" y1="793" x2="326" y2="793" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="338" y="778" width="133" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="404.5" y="797" text-anchor="middle" fill="#1D2523">/science-presenter</text>
+    <circle cx="490" cy="770" r="8" fill="#1D2523"/><text x="490" y="773.5" font-size="10" text-anchor="middle" fill="#F3F5F4">2</text>
+    <line x1="479" y1="793" x2="497" y2="793" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="509" y="778" width="179" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="598.5" y="797" text-anchor="middle" fill="#1D2523">audience brief <tspan fill="#A9761C">· blocking</tspan></text>
+    <circle cx="707" cy="770" r="8" fill="#1D2523"/><text x="707" y="773.5" font-size="10" text-anchor="middle" fill="#F3F5F4">3</text>
+    <line x1="696" y1="793" x2="714" y2="793" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="726" y="778" width="159" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="805.5" y="797" text-anchor="middle" fill="#1D2523">pre-flight source scan</text>
+    <circle cx="904" cy="770" r="8" fill="#1D2523"/><text x="904" y="773.5" font-size="10" text-anchor="middle" fill="#F3F5F4">4</text>
+    <line x1="893" y1="793" x2="911" y2="793" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="923" y="778" width="100" height="30" rx="8" fill="#FBFCFB" stroke="#D3DAD7"/>
+    <text x="973" y="797" text-anchor="middle" fill="#5A6663">deck / poster</text>
+    <circle cx="1042" cy="770" r="8" fill="#1D2523"/><text x="1042" y="773.5" font-size="10" text-anchor="middle" fill="#F3F5F4">5</text>
+    <line x1="1031" y1="793" x2="1049" y2="793" stroke="#435954" stroke-width="2" marker-end="url(#fh)"/>
+    <rect x="1061" y="778" width="159" height="30" rx="8" fill="#FDFEFD" stroke="#0F6B62" stroke-width="1.5"/>
+    <text x="1140.5" y="797" text-anchor="middle" fill="#1D2523">/study-coach rehearsal</text>
+  </g>
+  <text class="mono" x="1256" y="842" font-size="10.5" text-anchor="end" fill="#5A6663">step 5 runs only before a defense — otherwise the deck ships at step 4</text>
 </svg>

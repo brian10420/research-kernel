@@ -24,6 +24,7 @@ Per file, the load-bearing fills:
 | `skills/results-analyst` | analysis-script inventory, TOST margin, collection rule |
 | `skills/paper-writer` | paper tree, locked story, guardrails, headline numbers, tracks |
 | `skills/study-coach` | learner profile, `<study-log-path>` (seed from `templates/STUDY_LOG_TEMPLATE.md`) |
+| `skills/science-presenter` | language policy, source table (numbers/figures/story pointers), guard list, `<deck-source-dir>`, `<presentation-log-path>` (seed from `templates/PRESENTATION_LOG_TEMPLATE.md`) |
 | `agents/blind-reviewer` | venue list, domain, field-specific scrutiny list |
 | `agents/experiment-runner` | run commands, protocol block (verbatim), collection source |
 | `agents/regression-guardian` | test runner, guard-suite list, invariant table |
