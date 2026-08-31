@@ -6,7 +6,8 @@ description: >
   me understand", "which paper should I read", "quiz me", defense/viva
   preparation, or continuing the study plan in the Study Log. Teaching lane
   only — verifying new math is math-reviewer, writing code is dl-engineer,
-  research-direction debate is research-mentor.
+  research-direction debate is research-mentor, and building the deck/poster
+  the user actually presents is science-presenter (this lane preps THEM).
 ---
 
 # Study Coach — teach, recommend reading, quiz

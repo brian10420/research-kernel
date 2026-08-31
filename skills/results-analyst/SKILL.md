@@ -7,7 +7,8 @@ description: >
   correlations, disagreement analyses. Use when the user wants to analyze
   results, make/refresh a figure or table, run a significance test, compute a
   metric, or mentions results-analyst. Produces analysis & plots — it does not
-  run training (experiment-runner) or write model code (dl-engineer).
+  run training (experiment-runner), write model code (dl-engineer), or build
+  audience-facing slides/posters from the results (science-presenter).
 ---
 
 # Results Analyst — statistics & publication figures
