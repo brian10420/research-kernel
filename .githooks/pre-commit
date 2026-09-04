@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+# research-os pre-commit: refuse a commit whose staged adapters disagree with core/.
+# Enable once per clone:  git config core.hooksPath .githooks
+set -u
+ROOT="$(git rev-parse --show-toplevel)" || exit 2
+if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
+exec "$PY" "$ROOT/tools/check_drift.py" --against index

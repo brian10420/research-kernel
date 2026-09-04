@@ -1,157 +1,133 @@
-# claude_research_team
+# research-kernel
 
-**A multi-role Claude Code research team for ML research projects — 7 skills,
-4 subagents, and a roster contract.** MIT-licensed templates distilled from a
-working solo-research setup.
+> Built on the provider-neutral **research-os** architecture; internal schemas keep the `research-os/` namespace.
 
-## The team at a glance
+**A provider-neutral Research OS: the research methodology and its decision
+history are the canonical asset; every AI vendor is a replaceable runtime
+reached through generated adapters.** MIT-licensed. Formerly
+`claude_research_team` (a Claude Code skill collection); the GitHub rename to
+`research-kernel` is pending — see [`MIGRATION_AUDIT.md`](MIGRATION_AUDIT.md).
 
-![How the team works with you: seven skills share your session context; four subagents run isolated behind a context boundary](assets/team-map.svg)
+## Two layers, two homes
 
-**In one sentence:** seven skills sit *inside* your conversation and see
-everything you see, four subagents work *outside* it — you send a task brief
-across the boundary, they send back one report — and every hand-off passes
-through you.
+| layer | lives in | contents |
+| --- | --- | --- |
+| **cross-project** | *this repository* | `core/SCIENTIFIC_RULES.md` (the constitution), `core/roles/` (canonical role specs), cross-project `core/DECISIONS.md`, schemas for every state file, the compile layer, the evaluation scaffold |
+| **per-project** | *each research project's own repository* | `RESEARCH_STATE.md`, `DECISIONS.md`, `EXPERIMENT_LEDGER.md`, `HYPOTHESES.md`, `FAILED_IDEAS.md`, `OPEN_QUESTIONS.md`, seeded from [`templates/project-state/`](templates/project-state/) |
 
-### Reading the map in detail
+Model memory (any vendor) is a recall layer, never an authority layer. Git,
+the notes vault, and the experiment ledgers are the only scientific source of
+truth (`core/SCIENTIFIC_RULES.md` §0–§1).
 
-- **Enclosure is the message.** The two tinted zones are the diagram's core
-  claim: left = one shared context (the skills collaborate with your full
-  conversation), right = isolated contexts (the subagents never see it). No
-  agent talks to another directly — the map has no agent-to-agent edge at all.
-- **The dispatch bus crosses the boundary exactly twice**, labeled `task
-  brief` (out) and `one report` (back). That two-arrow interface is the whole
-  contract with an isolated role.
-- **The hexagon is the gate.** `regression-guardian` is the only hexagon and
-  the only amber on the page: after any risky code change it independently
-  certifies (✓) or sends the work back (✗ — through you) — the author never
-  certifies their own change.
-- **Line grammar:** solid arrow = a hand-off carrying work; thin plain line =
-  membership (nothing moves); dashed = the context boundary, and nothing else
-  is ever dashed.
-- **Names tell you the mechanism:** a leading `/` means an in-session skill
-  you invoke in the conversation; no slash + a doubled left edge means a
-  dispatched, isolated subagent. Small tags carry each role's hard rule
-  (`PDF only`, `never-push list`, `GPU · never cherry-picks`, `Study Log`,
-  `brief first`).
-### The four workflows
+## Layout
 
-![The four workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, the learning cycle back into the Study Log, and the presenting lane from verified numbers to a rehearsed deck](assets/team-flows.svg)
-
-*Build-and-test runs through the amber gate (with the ✗-reject loop back to
-`/dl-engineer`); the paper loop hands the blind reviewer only the PDF; learning
-cycles back into the Study Log so the next session starts where this one ended;
-and in the Present lane, verified numbers from `/results-analyst` go to
-`/science-presenter`, which asks a blocking audience brief before it builds
-anything — for a defense, `/study-coach` runs the rehearsal. Text versions
-live in [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md#typical-flows).*
-
-## Why roles?
-
-One assistant doing everything means the author reviews their own bugs, the
-reviewer knows the authors' intent, and every session re-derives context. This
-team splits the work by **context posture**: *skills* load into your current
-conversation (collaborate — design, code, analysis, writing, teaching), while
-*subagents* run isolated (dispatch-and-report — independent review,
-certification, mechanical ops). Independence is a feature you configure, not a
-vibe you hope for.
-
-## The team
-
-| # | Role | Kind | What it's for |
-|---|------|------|----------------|
-| 1 | `math-reviewer` | skill | verify math, shapes, derivations — never implements |
-| 2 | `dl-engineer` | skill | write/debug model + training code — never self-certifies |
-| 3 | `research-mentor` | skill | direction debates; verifies claims against the literature |
-| 4 | `blind-reviewer` | subagent | memoryless peer-review panel — sees only the PDF |
-| 5 | `repo-maintainer` | subagent | git/GitHub with an enforced never-push list |
-| 6 | `experiment-runner` | subagent | campaigns, GPU babysitting, no cherry-picking |
-| 7 | `results-analyst` | skill | publication-grade stats + figures, honesty doctrine |
-| 8 | `regression-guardian` | subagent | independent silent-bug gate; writes missing tests |
-| 9 | `paper-writer` | skill | manuscript revision + compile, honest-framing guardrails |
-| 10 | `study-coach` | skill | teaches YOU your own project — persistent Study Log, quizzes |
-| 11 | `science-presenter` | skill | audience-facing decks/posters — blocking brief, analogy-before-math, never inflates |
-
-Full roster contract with model routing and boundaries: [`RESEARCH_TEAM.md`](RESEARCH_TEAM.md).
-Design rationale (why author ≠ certifier, why the reviewer stays blind, the
-memory-wins rule): [`docs/design-notes.md`](docs/design-notes.md).
-
-## Install
-
-```bash
-git clone https://github.com/brian10420/claude_research_team
-cp -r claude_research_team/skills  your-project/.claude/skills
-cp -r claude_research_team/agents  your-project/.claude/agents
-cp    claude_research_team/RESEARCH_TEAM.md your-project/.claude/
+```
+core/                     canonical, provider-neutral — edit HERE
+  SCIENTIFIC_RULES.md     rules; RULES_HASH = sha256(this file)[:12]
+  DECISIONS.md            DECISION_000 (architecture), DECISION_001 (memory is recall-only)
+  RESEARCH_STATE.md  EXPERIMENT_LEDGER.md  HYPOTHESES.md  FAILED_IDEAS.md
+  LITERATURE_MAP.md  OPEN_QUESTIONS.md  STUDY_LOG.md      (schemas + one worked example each)
+  roles/                  one spec per role + README roster
+CLAUDE.md  AGENTS.md      GENERATED adapters (tools/sync.py) — never hand-edit
+.claude/agents/ .claude/skills/   GENERATED thin wrappers for Claude Code
+adapters/codex/           placeholder: AGENTS.md + core/roles are the Codex sources
+tools/                    sync.py · check_drift.py · anonymize.py
+.githooks/pre-commit      refuses commits whose adapters disagree with core/
+templates/project-state/  per-project state files to copy into a research repo
+templates/                Study Log, Presentation Log, session handoff, leak-check pattern
+eval/                     pre-registered rubric, blind protocol, task stubs, sealed label maps
+docs/                     design notes, hardening options, memory setup, skill-building process
+legacy/                   the pre-migration Claude-specific originals (not loaded by anything)
 ```
 
-Then do the **fill-in pass** — every project-specific slot is marked
-`<placeholder>` or `<!-- PROJECT-SPECIFIC -->`:
+## The roles
+
+Twelve canonical roles in [`core/roles/`](core/roles/README.md): eight
+*shared-context* roles that work inside your session (`math-reviewer`,
+`dl-engineer`, `research-mentor`, `results-analyst`, `paper-writer`,
+`study-coach`, `science-presenter`, `memory-curator`) and four *isolated* roles dispatched with a
+fresh context (`blind-reviewer`, `experiment-runner`, `regression-guardian`,
+`repo-maintainer`). Every spec has a purpose, an input contract, an output
+contract, hard rules (rule 0 is always the canary handshake), and a `runtime:`
+recommendation that never pins a vendor or a paid tier.
+
+The diagrams in [`assets/`](assets/) show the **Claude Code runtime view** of
+the same team (skills inside the session, subagents behind a context boundary,
+the guardian as the only gate); they predate the migration and remain accurate
+for that runtime.
+
+## Canary handshake (why agents cannot silently lose the rules)
+
+Subagents may not inherit instruction files. So: any orchestrator that spawns a
+role **pastes the full `core/roles/<role>.md` text and the line
+`RULES_HASH=<hash>` into the task prompt**; the role's first output line must be
+`ACK RULES_HASH=<hash>`, otherwise it halts and reports; `regression-guardian`
+rejects any run log without a valid ACK and records the rejection in the
+ledger. Details: `core/SCIENTIFIC_RULES.md` §3; optional mechanical enforcement:
+[`docs/hardening.md`](docs/hardening.md).
+
+## Compile layer
+
+`CLAUDE.md`, `AGENTS.md`, and the `.claude/` wrappers are generated from `core/`
+and carry the current `RULES_HASH`. Never edit them by hand.
 
 ```bash
-grep -rn "PROJECT-SPECIFIC" your-project/.claude/
+python3 tools/sync.py                 # regenerate every adapter
+python3 tools/check_drift.py          # exit 1 if any adapter disagrees with core/
+git config core.hooksPath .githooks   # once per clone: pre-commit refuses stale adapters
 ```
 
-Per-file guidance: [`docs/customization.md`](docs/customization.md). Adjust
-each agent's `model:`/`tools:` frontmatter to your plan.
+## Using it in a research project
 
-## The study-coach ecosystem
+1. Copy [`templates/project-state/`](templates/project-state/) into the
+   project (its README has the exact commands) and write the first
+   `RESEARCH_STATE.md` snapshot.
+2. Make `core/` reachable from the project root — vendor this repository as a
+   git submodule or copy `core/`; the generated `.claude/` wrappers resolve
+   `core/roles/<role>.md` **relative to the project root**.
+3. For Claude Code: copy `CLAUDE.md` and `.claude/` from here (or generate them
+   in place with `tools/sync.py`) and add the project's overlay — the
+   project-specific slots listed at the end of every role spec (paths, protocol
+   block, invariants, guards) — to the project's own instruction file, never to
+   `core/`.
+4. For any other harness: `AGENTS.md` + `core/roles/` are the sources
+   (`adapters/codex/README.md`).
+5. Optional agent memory for environment quirks only: [`docs/memory-setup.md`](docs/memory-setup.md).
 
-A tutor that keeps a persistent Study Log (curriculum arcs,
-quiz results, weak-spot review queue) so learning survives across sessions —
-built for "I can run my experiments, now I need to *defend* them" moments.
-Seed your log from [`templates/STUDY_LOG_TEMPLATE.md`](templates/STUDY_LOG_TEMPLATE.md);
-open lanes with [`templates/session-handoff-prompt.md`](templates/session-handoff-prompt.md).
+## Blind review and evaluation
 
-## The science-presenter (newest role)
+`tools/anonymize.py build` strips provenance, names, model names, e-mails, and
+timestamps from a review bundle and seals the label map in `eval/.sealed/`
+(git-ignored; reviewers never read it). `eval/RUBRIC.md` is pre-registered;
+`eval/PROTOCOL.md` defines the two comparisons (pure-model vs ecosystem) that
+are reported separately and graded blind.
 
-The outward-facing lane: turns your results into what outsiders actually
-absorb — animated HTML decks, design-canvas posters, one-pagers. Its contract
-is the interesting part: a **blocking audience brief** before any design work
-("tomorrow" doesn't waive it), a **pre-flight scan** that verifies every
-source figure/number file on disk before anything is embedded, an
-**analogy → picture → full math** ramp (math may move to backup slides, never
-vanishes), and an honesty rail under which simplification may omit but never
-inflate. It builds what you show; the study-coach preps *you* — for a defense,
-one makes the deck, the other runs the rehearsal. Log deliveries via
-[`templates/PRESENTATION_LOG_TEMPLATE.md`](templates/PRESENTATION_LOG_TEMPLATE.md).
+## How the roles were built
 
-## How these were built
-
-Skill files are process documentation, and process documentation lies unless
-tested. The study-coach was built RED→GREEN: baseline agent observed failing
-(expert-density walls, trap quizzes, no persistence), skill written as a
-positive session contract against that exact failure, then verified. The
-science-presenter repeated the loop: the baseline refused to block on the
-audience question and shipped a jargon deck for an assumed venue; the skill
-pins the brief as a blocking gate and was verified to hold it under time
-pressure. The story, and when to scale the ceremony up or down:
-[`docs/creating-skills-with-tdd.md`](docs/creating-skills-with-tdd.md).
+Process documentation lies unless tested. The role files were written
+RED→GREEN against observed baseline failures —
+[`docs/creating-skills-with-tdd.md`](docs/creating-skills-with-tdd.md). Design
+rationale (context posture, independence, why memory is recall-only):
+[`docs/design-notes.md`](docs/design-notes.md).
 
 ## Companion third-party skills (not vendored — install from upstream)
 
-This team pairs well with, and was developed alongside:
-
-- [mattpocock/skills](https://github.com/mattpocock/skills) — `tdd`,
-  `diagnose`, `grill-me`, `grill-with-docs`, `caveman`, `prototype`,
-  `zoom-out`, `to-prd`, `to-issues`
+- [mattpocock/skills](https://github.com/mattpocock/skills) — `tdd`, `diagnose`,
+  `grill-me`, `grill-with-docs`, `caveman`, `prototype`, `zoom-out`, `to-prd`,
+  `to-issues`
 - [vercel-labs/skills](https://github.com/vercel-labs/skills) — the skills CLI
   and `find-skills`
 - [Anthropic superpowers plugin](https://github.com/anthropics/claude-code) —
   `writing-skills` powered the TDD process above
 
-None of their code is copied here; all attribution and licensing remain
-theirs.
+None of their code is copied here; all attribution and licensing remain theirs.
 
 ## What was removed (honesty note)
 
-These are scrubbed versions of a working configuration from an active,
-unpublished ML research project (audio / affective computing). Every metric
-value, dataset specific, campaign name, file inventory, and personal detail
-was replaced with placeholders or invented generic examples. The **structure
-and doctrine are real and battle-tested; the numbers are yours to fill in.**
-
-*Last synced from the private originals: 2026-08-31.*
+The role content was distilled from a working configuration of an active,
+unpublished ML research project. Every metric value, dataset specific, campaign
+name, file inventory, and personal detail is a placeholder or an invented
+generic example; the structure and doctrine are real and battle-tested.
 
 ## License
 

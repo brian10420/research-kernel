@@ -1,0 +1,10 @@
+# python
+__pycache__/
+*.pyc
+
+# blind-review label mappings are written here by tools/anonymize.py and must
+# never be committed or read by a reviewer role (SCIENTIFIC_RULES §7)
+eval/.sealed/*
+!eval/.sealed/README.md
+!eval/.sealed/.gitkeep
+.~lock.*#
