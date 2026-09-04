@@ -102,3 +102,31 @@ audit trail.
 **Alternatives rejected.**
 - Keep "memory wins" but sync more often — still no audit trail for what memory
   asserted.
+
+---
+
+```yaml
+id: DECISION_002
+title: Freeze eval/RUBRIC.md v1 and eval/PROTOCOL.md v1 as the pre-registered evaluation
+date: 2026-09-04
+proposer: fable          # drafted in Phase 6 of the migration
+decided_by: ""           # a human freezes; until then the rubric is pre-registered but not frozen
+status: proposed
+evidence: [eval/RUBRIC.md, eval/PROTOCOL.md]
+supersedes: ""
+superseded_by: ""
+```
+
+**Context.** The evaluation scaffold (five tasks, weights 20/30/20/20/10,
+anchors 1–5, two comparisons graded blind) exists; results are meaningful only
+against a frozen rubric.
+
+**Decision (proposed).** Accepting this entry freezes rubric v1 and protocol
+v1. Any later change requires a new entry that supersedes this one and a
+version bump; results across versions are never merged.
+
+**Consequences.** Planted-defect lists for T1/T2/T4 must be sealed before the
+first run; repetitions per cell are declared before the first run.
+
+**Alternatives rejected.** Grading against an evolving rubric — makes every
+comparison across runs invalid.

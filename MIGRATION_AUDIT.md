@@ -173,3 +173,37 @@ one-line reason is appended to this file.
 Kept in place (still valid): `docs/design-notes.md` (memory-wins paragraph
 annotated as superseded by DECISION_001), `docs/creating-skills-with-tdd.md`,
 `templates/*`, `assets/*.svg` (labeled the Claude Code runtime view), `LICENSE`.
+
+## Manual actions left for the owner (end of the migration session, 2026-09-04)
+
+1. **GitHub rename** `claude_research_team` → `research-os` (owner `brian10420`);
+   update the local remote URL afterwards (the migration session never ran a
+   network git operation and never pushed).
+2. **Push** branch `migration/research-os` only after re-running the private
+   leak-gate yourself on the tree (it printed CLEAN at the end of the session).
+3. **Copy `templates/project-state/`** into the consumer project and write its
+   first `RESEARCH_STATE.md` snapshot; record the adoption as that project's
+   `DECISION_000`.
+4. **Hook-hardening decision:** `docs/hardening.md` items H1–H5, each a
+   `DECISIONS.md` entry if taken; H4 (a write-guard for the consumer project's
+   hand-maintained `CLAUDE.md`) is the item you asked to have listed.
+5. **Optional memory install:** `docs/memory-setup.md` (nothing was installed).
+6. **Private sync manifest remap:** the consumer project's public-sync manifest
+   still maps its private role files to `skills/…` and `agents/…`; remap to
+   `core/roles/<role>.md` (+ the generated wrappers) or retire it in favour of
+   the new two-layer doctrine (DECISION_000 consequence).
+7. **Session fences persist:** the migration session installed permission
+   `deny` rules in the consumer project's local (git-ignored) settings — 19
+   network-git denies (`git push/fetch/pull/clone/ls-remote/remote-*`, `gh`)
+   and 3 `Edit(...)` denies on the consumer project, the agent-memory
+   directory, and the notes vault. After the migration, remove the network-git
+   denies; optionally keep the three `Edit(...)` denies as permanent hardening.
+   Known gap, accepted: `Edit(...)` deny rules do not cover shell-mediated
+   writes; `git -C <dir> push` with *no* arguments is not matched by the
+   mid-wildcard rule (add `Bash(git * push)`, `Bash(git * fetch)`,
+   `Bash(git * pull)` via `/permissions` if you keep the fences).
+8. **DECISION_002:** accept or reject the rubric freeze.
+9. **Agent memory for this project** was not updated this session (the memory
+   directory was inside the fence); the private session record is the source
+   for any memory the owner wants to add — as a reviewed distillation, not a
+   dump.
