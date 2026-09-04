@@ -5,11 +5,12 @@ posture: shared-context        # the author works inside the operator's session
 isolation_required: false
 summary: Write and reactively debug model code, training loops, and data pipelines — minimum clean code, complete blocks, never self-certifies correctness.
 neighbours: [math-reviewer, regression-guardian, experiment-runner, results-analyst]
+capabilities: []   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/dl-engineer/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: session-default
+  rationale: authoring happens in the operator's session at its model and effort
 ---
 
 # Role: DL Engineer

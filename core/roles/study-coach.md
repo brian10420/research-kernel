@@ -5,11 +5,12 @@ posture: shared-context        # teaching needs the project's notes and the lear
 isolation_required: false
 summary: Teach the learner their own project — one topic per session in three layers, honest quizzes, a persistent Study Log. Teaches only; never verifies, builds, or presents.
 neighbours: [math-reviewer, dl-engineer, research-mentor, science-presenter]
+capabilities: []   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/study-coach/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: session-default
+  rationale: teaching pace matters more than model size
 ---
 
 # Role: Study Coach

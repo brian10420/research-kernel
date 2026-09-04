@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """tools/check_drift.py — fail if the committed adapters are stale relative to core/.
 
-Regenerates CLAUDE.md and AGENTS.md into a temporary directory with tools/sync.py
-and compares them byte-for-byte against either the working tree (default) or the
-git index (--against index, used by .githooks/pre-commit so a commit can never
-carry adapters that disagree with the core/ it commits).
+Regenerates every adapter (CLAUDE.md, AGENTS.md, .claude/agents/*.md,
+.claude/skills/*/SKILL.md) in memory with tools/sync.py and compares them
+byte-for-byte against either the working tree (default) or the git index
+(--against index, used by .githooks/pre-commit so a commit can never carry
+adapters that disagree with the core/ it commits). Orphaned wrappers (present but
+no longer generated) also count as drift.
 
 Exit status: 0 = no drift; 1 = drift or a missing adapter; 2 = tool error.
 Standard library only.
@@ -14,7 +16,6 @@ from __future__ import annotations
 import argparse
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -47,12 +48,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--against", choices=("worktree", "index"), default="worktree")
     args = ap.parse_args(argv)
 
-    with tempfile.TemporaryDirectory(prefix="research-os-sync-") as tmp:
-        sync.write(Path(tmp))
-        fresh = {name: (Path(tmp) / name).read_bytes() for name in sync.ADAPTERS}
+    fresh = sync.generate()
 
     drift = False
-    for name in sync.ADAPTERS:
+    # orphaned wrappers: on disk / in index but no longer generated (a removed or renamed role)
+    for orphan in sorted(set(sync.wrapper_globs(ROOT)) - set(fresh)):
+        if committed_bytes(orphan, args.against) is not None:
+            print(f"check_drift: {orphan} is an ORPHAN wrapper (no role generates it) — remove it")
+            drift = True
+    for name in fresh:
         have = committed_bytes(name, args.against)
         if have is None:
             print(f"check_drift: {name} is missing from the {args.against} — run: python3 tools/sync.py")
@@ -62,9 +66,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"check_drift: {name} is STALE relative to core/ ({args.against}); {first_diff_line(fresh[name], have)}")
             drift = True
     if drift:
-        print("check_drift: FAIL — regenerate with `python3 tools/sync.py` and stage CLAUDE.md + AGENTS.md")
+        print("check_drift: FAIL — regenerate with `python3 tools/sync.py` and stage every generated adapter")
         return 1
-    print(f"check_drift: OK — adapters match core/ (RULES_HASH={sync.rules_hash(sync.RULES_PATH.read_bytes())})")
+    print(f"check_drift: OK — {len(fresh)} adapters match core/ (RULES_HASH={sync.rules_hash(sync.RULES_PATH.read_bytes())})")
     return 0
 
 

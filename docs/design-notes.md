@@ -41,6 +41,12 @@ than emitting a hollow ✓).
 
 ## Memory wins
 
+> **Superseded on 2026-09-04 by `core/DECISIONS.md` DECISION_001.** Git,
+> Obsidian, and the experiment ledgers are authoritative; model memory is
+> recall-only; role specs carry no volatile facts (they live in the project's
+> `RESEARCH_STATE.md` / `EXPERIMENT_LEDGER.md`). The paragraph below is kept
+> as the historical rationale for the rule it replaced.
+
 Role files bake in project facts so every session starts sharp — but facts
 rot. Every file that carries facts opens its facts block with a date stamp and
 the clause: *when this file and project memory disagree, trust memory and flag

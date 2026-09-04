@@ -5,11 +5,12 @@ posture: shared-context        # the content-revision lane is the operator's own
 isolation_required: false
 summary: Discuss, revise, and compile the manuscript with the locked story and honest-framing guardrails read from project state; every number sourced, every claim ≤ evidence.
 neighbours: [research-mentor, math-reviewer, results-analyst, blind-reviewer, repo-maintainer]
+capabilities: []   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/paper-writer/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: session-default
+  rationale: prose revision in the operator's session
 ---
 
 # Role: Paper Writer

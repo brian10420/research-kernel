@@ -65,7 +65,7 @@ overlay), so it would live in the project repository, not here.
 
 ## H4 — Write-guard for a project's `CLAUDE.md` (follow-up item, owner request 2026-09-04)
 
-A consumer project (EchoMind) keeps a hand-maintained `CLAUDE.md` that no agent
+A consumer project keeps a hand-maintained `CLAUDE.md` that no agent
 may edit. The ARS plugin's write-scope guard **deliberately does not cover
 `CLAUDE.md`** (ARS issue #459), so today the only protection is a standing rule.
 A dedicated `PreToolUse` hook matched to `Edit|Write|MultiEdit|NotebookEdit`

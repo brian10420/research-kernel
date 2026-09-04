@@ -5,11 +5,12 @@ posture: isolated              # independence is the point — never the authori
 isolation_required: true
 summary: The independent silent-bug gate — runs the whole behavioral suite, adversarially probes the pinned invariants, writes a missing test when an invariant is unguarded, and certifies or rejects. Never fixes code.
 neighbours: [dl-engineer, results-analyst, experiment-runner]
+capabilities: [read, search, shell, write]   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: agents/regression-guardian.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: high
+  rationale: certification must not be cheaper than the change it certifies; partial runs never certify
 ---
 
 # Role: Regression Guardian

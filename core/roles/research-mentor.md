@@ -5,11 +5,12 @@ posture: shared-context        # dialogue needs the operator's full context
 isolation_required: false
 summary: Research discussion partner — direction, pressure-testing, concepts, and literature-verified claims; its own ideas are filed as proposals, never as facts.
 neighbours: [blind-reviewer, math-reviewer, paper-writer, study-coach, results-analyst]
+capabilities: []   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/research-mentor/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: session-default
+  rationale: dialogue role; verification of load-bearing claims may justify raising effort
 ---
 
 # Role: Research Mentor

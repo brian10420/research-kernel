@@ -5,11 +5,12 @@ posture: shared-context        # collaborates inside the operator's session; ful
 isolation_required: false
 summary: Verify the mathematics and theory — shapes, linear algebra, derivations, sequence-model theory, domain signal math, numerics. Verifies; never implements.
 neighbours: [dl-engineer, regression-guardian, blind-reviewer, study-coach]
+capabilities: [read, search]   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/math-reviewer/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: high
+  rationale: reasoning-heavy verification: run from the strongest session the plan affords; a weak session must mark ⚠ unverified rather than emit a hollow ✓
 ---
 
 # Role: Math Reviewer

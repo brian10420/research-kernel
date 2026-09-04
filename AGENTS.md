@@ -4,10 +4,10 @@
 
 # AGENTS.md — harness-neutral adapter for research-os
 
-RULES_HASH = 3dcb9d922543
+RULES_HASH = 0342dab5c274
 
-Canary line to embed verbatim in every agent prompt: `RULES_HASH=3dcb9d922543`
-Expected first output line of every role: `ACK RULES_HASH=3dcb9d922543`
+Canary line to embed verbatim in every agent prompt: `RULES_HASH=0342dab5c274`
+Expected first output line of every role: `ACK RULES_HASH=0342dab5c274`
 
 ## Where truth lives (pointer map)
 
@@ -78,10 +78,12 @@ instruction files or its own role body. The handshake makes that loss loud.
    `ACK RULES_HASH=<hash>`, echoing the hash it was given. If no `RULES_HASH=`
    line is present in the prompt or loader, the role halts, outputs
    `HALT: RULES_HASH missing — rules not loaded`, and reports instead of
-   working. The role cannot verify the hash value itself; validity — equality
+   working. A role cannot derive the correct hash itself; validity — equality
    with the RULES_HASH of the rules in force at launch, as recorded in the
    adapter header at that revision — is checked by the orchestrator on receipt
-   and by `regression-guardian` on every run log.
+   and by `regression-guardian` on every run log. A generated wrapper that
+   carries the current hash additionally halts on a mismatching prompt hash
+   (`HALT: stale RULES_HASH`).
 3. **Enforcement at the record.** `regression-guardian` rejects any experiment or
    run log that lacks a valid ACK line — missing, malformed, or stale — and
    records the rejection in `EXPERIMENT_LEDGER.md` (`status: rejected`,
@@ -124,25 +126,25 @@ instruction files or its own role body. The handshake makes that loss loud.
 
 ## Roles (canonical specs in `core/roles/`)
 
-| role | posture | runtime (recommendation) | spec |
-| --- | --- | --- | --- |
-| `blind-reviewer` | isolated | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/blind-reviewer.md` |
-| `dl-engineer` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/dl-engineer.md` |
-| `experiment-runner` | isolated | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/experiment-runner.md` |
-| `math-reviewer` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/math-reviewer.md` |
-| `paper-writer` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/paper-writer.md` |
-| `regression-guardian` | isolated | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/regression-guardian.md` |
-| `repo-maintainer` | isolated | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/repo-maintainer.md` |
-| `research-mentor` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/research-mentor.md` |
-| `results-analyst` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/results-analyst.md` |
-| `science-presenter` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/science-presenter.md` |
-| `study-coach` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/study-coach.md` |
+| role | posture | runtime (recommendation) | spec | wrapper |
+| --- | --- | --- | --- | --- |
+| `blind-reviewer` | isolated | model `inherit`, effort high | `core/roles/blind-reviewer.md` | `—` |
+| `dl-engineer` | shared-context | model `inherit`, effort session-default | `core/roles/dl-engineer.md` | `—` |
+| `experiment-runner` | isolated | model `smaller-tier`, effort medium | `core/roles/experiment-runner.md` | `—` |
+| `math-reviewer` | shared-context | model `inherit`, effort high | `core/roles/math-reviewer.md` | `—` |
+| `paper-writer` | shared-context | model `inherit`, effort session-default | `core/roles/paper-writer.md` | `—` |
+| `regression-guardian` | isolated | model `inherit`, effort high | `core/roles/regression-guardian.md` | `—` |
+| `repo-maintainer` | isolated | model `smaller-tier`, effort medium | `core/roles/repo-maintainer.md` | `—` |
+| `research-mentor` | shared-context | model `inherit`, effort session-default | `core/roles/research-mentor.md` | `—` |
+| `results-analyst` | shared-context | model `inherit`, effort session-default | `core/roles/results-analyst.md` | `—` |
+| `science-presenter` | shared-context | model `inherit`, effort session-default | `core/roles/science-presenter.md` | `—` |
+| `study-coach` | shared-context | model `inherit`, effort session-default | `core/roles/study-coach.md` | `—` |
 
 ## Loading a role (any agent runtime)
 
 1. Read `core/roles/<role>.md` in full.
-2. Put its entire text plus the line `RULES_HASH=3dcb9d922543` into the agent's instructions or task prompt. Do not rely on the runtime inheriting this file.
-3. Expect `ACK RULES_HASH=3dcb9d922543` as the agent's first output line; anything else means the rules were not loaded — stop and re-dispatch.
+2. Put its entire text plus the line `RULES_HASH=0342dab5c274` into the agent's instructions or task prompt. Do not rely on the runtime inheriting this file.
+3. Expect `ACK RULES_HASH=0342dab5c274` as the agent's first output line; anything else means the rules were not loaded — stop and re-dispatch.
 4. Isolated roles (`blind-reviewer`, `experiment-runner`, `regression-guardian`, `repo-maintainer`) run in a fresh context with only their inputs; shared-context roles run inside the operator's session.
 5. `blind-reviewer` receives only the output of `tools/anonymize.py`; no runtime may read `eval/.sealed/` on a reviewer's behalf.
 6. Model choice is a recommendation (`inherit` for reasoning-heavy roles, a smaller model for mechanical roles); never a vendor or paid-tier requirement.

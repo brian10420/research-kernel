@@ -19,7 +19,7 @@ spec text is the authority, the wrapper is a pointer.
 | [`blind-reviewer`](blind-reviewer.md) | **isolated** | memoryless peer-review panel on an anonymized bundle | accept project context |
 | [`experiment-runner`](experiment-runner.md) | **isolated** | launch and babysit runs; protocol verbatim; ledger rows | cherry-pick; deviate from protocol |
 | [`regression-guardian`](regression-guardian.md) | **isolated** | the silent-bug gate; whole suite; writes missing tests | fix code; certify from a partial run |
-| [`repo-maintainer`](repo-maintainer.md) | **isolated** | git/GitHub with the never-push list | push protected content; force-push unasked |
+| [`repo-maintainer`](repo-maintainer.md) | **isolated** | git/GitHub with the never-push list | push protected content; forced push unasked |
 
 **Posture** is the load-bearing design decision. *Shared-context* roles join
 the operator's session and see everything — discussion, design, revision,

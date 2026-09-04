@@ -5,11 +5,12 @@ posture: shared-context        # needs full project context and the session's bu
 isolation_required: false
 summary: Turn the research into materials outsiders understand — decks, posters, one-pagers — behind a blocking audience brief, a pre-flight source scan, an analogy→picture→math ramp, and an honesty rail.
 neighbours: [results-analyst, paper-writer, study-coach]
+capabilities: []   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/science-presenter/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: session-default
+  rationale: needs the session's build tooling and full context
 ---
 
 # Role: Science Presenter

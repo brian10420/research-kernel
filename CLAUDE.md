@@ -4,10 +4,10 @@
 
 # CLAUDE.md — Claude Code adapter for research-os
 
-RULES_HASH = 3dcb9d922543
+RULES_HASH = 0342dab5c274
 
-Canary line to embed verbatim in every agent prompt: `RULES_HASH=3dcb9d922543`
-Expected first output line of every role: `ACK RULES_HASH=3dcb9d922543`
+Canary line to embed verbatim in every agent prompt: `RULES_HASH=0342dab5c274`
+Expected first output line of every role: `ACK RULES_HASH=0342dab5c274`
 
 ## Where truth lives (pointer map)
 
@@ -78,10 +78,12 @@ instruction files or its own role body. The handshake makes that loss loud.
    `ACK RULES_HASH=<hash>`, echoing the hash it was given. If no `RULES_HASH=`
    line is present in the prompt or loader, the role halts, outputs
    `HALT: RULES_HASH missing — rules not loaded`, and reports instead of
-   working. The role cannot verify the hash value itself; validity — equality
+   working. A role cannot derive the correct hash itself; validity — equality
    with the RULES_HASH of the rules in force at launch, as recorded in the
    adapter header at that revision — is checked by the orchestrator on receipt
-   and by `regression-guardian` on every run log.
+   and by `regression-guardian` on every run log. A generated wrapper that
+   carries the current hash additionally halts on a mismatching prompt hash
+   (`HALT: stale RULES_HASH`).
 3. **Enforcement at the record.** `regression-guardian` rejects any experiment or
    run log that lacks a valid ACK line — missing, malformed, or stale — and
    records the rejection in `EXPERIMENT_LEDGER.md` (`status: rejected`,
@@ -124,24 +126,25 @@ instruction files or its own role body. The handshake makes that loss loud.
 
 ## Roles (canonical specs in `core/roles/`)
 
-| role | posture | runtime (recommendation) | spec |
-| --- | --- | --- | --- |
-| `blind-reviewer` | isolated | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/blind-reviewer.md` |
-| `dl-engineer` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/dl-engineer.md` |
-| `experiment-runner` | isolated | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/experiment-runner.md` |
-| `math-reviewer` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/math-reviewer.md` |
-| `paper-writer` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/paper-writer.md` |
-| `regression-guardian` | isolated | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/regression-guardian.md` |
-| `repo-maintainer` | isolated | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/repo-maintainer.md` |
-| `research-mentor` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/research-mentor.md` |
-| `results-analyst` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/results-analyst.md` |
-| `science-presenter` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/science-presenter.md` |
-| `study-coach` | shared-context | model `TBD (Phase 4)`, effort TBD (Phase 4) | `core/roles/study-coach.md` |
+| role | posture | runtime (recommendation) | spec | wrapper |
+| --- | --- | --- | --- | --- |
+| `blind-reviewer` | isolated | model `inherit (`inherit`)`, effort high | `core/roles/blind-reviewer.md` | `.claude/agents/blind-reviewer.md` |
+| `dl-engineer` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/dl-engineer.md` | `.claude/skills/dl-engineer/SKILL.md` |
+| `experiment-runner` | isolated | model `sonnet (`smaller-tier`)`, effort medium | `core/roles/experiment-runner.md` | `.claude/agents/experiment-runner.md` |
+| `math-reviewer` | shared-context | model `inherit (`inherit`)`, effort high | `core/roles/math-reviewer.md` | `.claude/skills/math-reviewer/SKILL.md` |
+| `paper-writer` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/paper-writer.md` | `.claude/skills/paper-writer/SKILL.md` |
+| `regression-guardian` | isolated | model `inherit (`inherit`)`, effort high | `core/roles/regression-guardian.md` | `.claude/agents/regression-guardian.md` |
+| `repo-maintainer` | isolated | model `sonnet (`smaller-tier`)`, effort medium | `core/roles/repo-maintainer.md` | `.claude/agents/repo-maintainer.md` |
+| `research-mentor` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/research-mentor.md` | `.claude/skills/research-mentor/SKILL.md` |
+| `results-analyst` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/results-analyst.md` | `.claude/skills/results-analyst/SKILL.md` |
+| `science-presenter` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/science-presenter.md` | `.claude/skills/science-presenter/SKILL.md` |
+| `study-coach` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/study-coach.md` | `.claude/skills/study-coach/SKILL.md` |
 
 ## Claude Code mechanics
 
-- **Shared-context roles** are loaded as skills: `.claude/skills/<role>/SKILL.md` is a thin wrapper that reads `core/roles/<role>.md` by relative path and passes the RULES_HASH above. The spec text is the authority; the wrapper is a pointer.
-- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper whose body only states that the full spec and RULES_HASH must arrive in the task prompt. When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line `RULES_HASH=3dcb9d922543` into the prompt yourself — subagents may not inherit this file or their agent body.
+- **Shared-context roles** are loaded as skills: `.claude/skills/<role>/SKILL.md` is a generated wrapper that injects `core/roles/<role>.md` at load time (dynamic context) and carries the RULES_HASH above. The spec text is the authority; the wrapper is a pointer.
+- **Custom subagents do load the CLAUDE.md hierarchy** (built-in Explore/Plan agents skip it) but never the session's auto-memory, and their own body is not guaranteed to reach them on every harness — so the spec and hash are embedded in the prompt regardless.
+- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper whose body only states that the full spec and RULES_HASH must arrive in the task prompt. When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line `RULES_HASH=0342dab5c274` into the prompt yourself — subagents may not inherit this file or their agent body.
 - **Missing ACK is a loud failure.** A role whose first line is not `ACK RULES_HASH=…` did not load the rules; stop and re-dispatch. `regression-guardian` rejects run logs without it.
 - **Blind review:** never hand `blind-reviewer` anything but the bundle produced by `tools/anonymize.py`; `eval/.sealed/` is off-limits to reviewers.
 - **Model routing:** `inherit` for reasoning-heavy roles, a smaller model for mechanical roles; no role pins a paid tier. Concrete tool and plugin names (artifact publishing, design canvas, web search, research-report pipelines) are project-overlay matters, not part of the canonical specs.

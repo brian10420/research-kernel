@@ -98,10 +98,12 @@ instruction files or its own role body. The handshake makes that loss loud.
    `ACK RULES_HASH=<hash>`, echoing the hash it was given. If no `RULES_HASH=`
    line is present in the prompt or loader, the role halts, outputs
    `HALT: RULES_HASH missing — rules not loaded`, and reports instead of
-   working. The role cannot verify the hash value itself; validity — equality
+   working. A role cannot derive the correct hash itself; validity — equality
    with the RULES_HASH of the rules in force at launch, as recorded in the
    adapter header at that revision — is checked by the orchestrator on receipt
-   and by `regression-guardian` on every run log.
+   and by `regression-guardian` on every run log. A generated wrapper that
+   carries the current hash additionally halts on a mismatching prompt hash
+   (`HALT: stale RULES_HASH`).
 3. **Enforcement at the record.** `regression-guardian` rejects any experiment or
    run log that lacks a valid ACK line — missing, malformed, or stale — and
    records the rejection in `EXPERIMENT_LEDGER.md` (`status: rejected`,

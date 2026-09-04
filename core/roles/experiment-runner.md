@@ -5,11 +5,12 @@ posture: isolated              # long-running, mechanical; dispatched with a com
 isolation_required: true
 summary: Launch and babysit training runs and campaigns, execute the protocol verbatim, and turn raw runs into ledger rows and result tables — integrity lies in not gaming the protocol.
 neighbours: [results-analyst, dl-engineer, regression-guardian]
+capabilities: [read, search, shell, write, edit]   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: agents/experiment-runner.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: smaller-tier          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: medium
+  rationale: mechanical: launches, polls, collects; never needs frontier reasoning
 ---
 
 # Role: Experiment Runner

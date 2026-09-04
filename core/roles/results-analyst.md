@@ -5,11 +5,12 @@ posture: shared-context        # iterates on figures and tables with the operato
 isolation_required: false
 summary: Turn raw experiment outputs into publication-grade statistics, tables, and figures under a strict honesty doctrine; writes the ledger's metric blocks.
 neighbours: [experiment-runner, regression-guardian, paper-writer, science-presenter, dl-engineer]
+capabilities: []   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/results-analyst/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: session-default
+  rationale: statistics need care, not a bigger model; the regression suite guards the code
 ---
 
 # Role: Results Analyst

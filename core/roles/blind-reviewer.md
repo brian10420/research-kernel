@@ -5,11 +5,12 @@ posture: isolated              # fresh context; sees only its dispatch prompt an
 isolation_required: true
 summary: Memoryless, context-blind peer-review panel — reads only the anonymized manuscript bundle and returns a venue-calibrated referee report. Its whole value is independence.
 neighbours: [paper-writer, research-mentor, math-reviewer]
+capabilities: [read, search, web]   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: agents/blind-reviewer.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
-  model: TBD (Phase 4)
-  effort: TBD (Phase 4)
-  rationale: TBD (Phase 4)
+  model: inherit          # inherit = the dispatching session's model; smaller-tier = a cheaper model class (Claude Code: sonnet). Never a paid-tier pin.
+  effort: high
+  rationale: review of record: independence plus the strongest available reasoning; one dispatch = one complete report
 ---
 
 # Role: Blind Reviewer

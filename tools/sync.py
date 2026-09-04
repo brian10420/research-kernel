@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
-"""tools/sync.py — compile core/ into the runtime adapters CLAUDE.md and AGENTS.md.
+"""tools/sync.py — compile core/ into every runtime adapter.
+
+Generates, from core/SCIENTIFIC_RULES.md and core/roles/*.md:
+  CLAUDE.md                          Claude Code adapter
+  AGENTS.md                          harness-neutral adapter
+  .claude/agents/<role>.md           thin wrapper per ISOLATED role (posture: isolated)
+  .claude/skills/<role>/SKILL.md     thin wrapper per SHARED-CONTEXT role
 
 Deterministic: identical core/ bytes produce identical adapter bytes (no
 timestamps, sorted roles, LF newlines). Standard library only.
 
 Usage:
-    python3 tools/sync.py            # write CLAUDE.md and AGENTS.md at the repo root
-    python3 tools/sync.py --out DIR  # write them into DIR instead (used by check_drift.py)
+    python3 tools/sync.py            # write all adapters under the repo root
+    python3 tools/sync.py --out DIR  # write them under DIR instead (used by check_drift.py)
     python3 tools/sync.py --hash     # print RULES_HASH only
+    python3 tools/sync.py --list     # print the adapter paths it generates
 
 Edit core/, never the generated files.
 """
@@ -23,7 +30,21 @@ ROOT = Path(__file__).resolve().parent.parent
 CORE = ROOT / "core"
 RULES_PATH = CORE / "SCIENTIFIC_RULES.md"
 ROLES_DIR = CORE / "roles"
-ADAPTERS = ("CLAUDE.md", "AGENTS.md")
+ROOT_ADAPTERS = ("CLAUDE.md", "AGENTS.md")
+
+# runtime-neutral capability -> Claude Code tool names (isolated roles only)
+CAP_TOOLS = {
+    "read": ["Read"],
+    "search": ["Grep", "Glob"],
+    "shell": ["Bash"],
+    "write": ["Write"],
+    "edit": ["Edit"],
+    "web": ["WebSearch", "WebFetch"],
+}
+TOOL_ORDER = ["Read", "Grep", "Glob", "Bash", "Write", "Edit", "WebSearch", "WebFetch"]
+# runtime-neutral model class -> Claude Code `model:` value (verified against the live docs 2026-09-04:
+# accepted values are sonnet | opus | haiku | fable | <full id> | inherit). Never a paid-tier pin.
+MODEL_MAP = {"inherit": "inherit", "smaller-tier": "sonnet"}
 
 INCLUDE_START = "<!-- adapter:include -->"
 INCLUDE_END = "<!-- /adapter:include -->"
@@ -98,6 +119,15 @@ def parse_frontmatter(text: str) -> dict:
     return data
 
 
+def _as_list(value) -> list[str]:
+    if isinstance(value, list):
+        return value
+    value = (value or "").strip()
+    if value.startswith("[") and value.endswith("]"):
+        value = value[1:-1]
+    return [v.strip() for v in value.split(",") if v.strip()]
+
+
 def load_roles() -> list[dict]:
     roles = []
     for path in sorted(ROLES_DIR.glob("*.md")):
@@ -115,7 +145,10 @@ def load_roles() -> list[dict]:
                 "summary": fm.get("summary", ""),
                 "model": runtime.get("model", "?"),
                 "effort": runtime.get("effort", "?"),
+                "rationale": runtime.get("rationale", ""),
+                "capabilities": _as_list(fm.get("capabilities", "")),
                 "path": f"core/roles/{path.name}",
+                "file": path.name,
             }
         )
     return roles
@@ -147,16 +180,92 @@ def render_pointer_map() -> str:
     return "\n".join(lines)
 
 
-def render_roster(roles: list[dict]) -> str:
+def render_roster(roles: list[dict], vendor: str = "") -> str:
     lines = [
-        "| role | posture | runtime (recommendation) | spec |",
-        "| --- | --- | --- | --- |",
+        "| role | posture | runtime (recommendation) | spec | wrapper |",
+        "| --- | --- | --- | --- | --- |",
     ]
     for r in roles:
+        model = r["model"]
+        if vendor == "claude":
+            model = f"{MODEL_MAP.get(model, model)} (`{model}`)"
+        wrapper = wrapper_path(r) if vendor == "claude" else "—"
         lines.append(
-            f"| `{r['role']}` | {r['posture']} | model `{r['model']}`, effort {r['effort']} | `{r['path']}` |"
+            f"| `{r['role']}` | {r['posture']} | model `{model}`, effort {r['effort']} | `{r['path']}` | `{wrapper}` |"
         )
     return "\n".join(lines)
+
+
+def wrapper_path(r: dict) -> str:
+    if r["posture"] == "isolated":
+        return f".claude/agents/{r['role']}.md"
+    return f".claude/skills/{r['role']}/SKILL.md"
+
+
+def claude_tools(r: dict) -> str:
+    names: list[str] = []
+    for cap in r["capabilities"]:
+        for tool in CAP_TOOLS.get(cap, []):
+            if tool not in names:
+                names.append(tool)
+    return ", ".join(sorted(names, key=TOOL_ORDER.index))
+
+
+def render_agent_wrapper(r: dict, h: str) -> str:
+    model = MODEL_MAP.get(r["model"], r["model"])
+    tools = claude_tools(r)
+    tools_line = f"tools: {tools}\n" if tools else ""
+    decline = (
+        "Decline any project context, memory, or decision history offered to you; review only the anonymized bundle.\n"
+        if r["role"] == "blind-reviewer" else ""
+    )
+    return (
+        "---\n"
+        f"name: {r['role']}\n"
+        f"description: {r['summary']} ISOLATED role of research-os — dispatch only with the full canonical spec and the RULES_HASH line in the task prompt (canary protocol).\n"
+        f"{tools_line}"
+        f"model: {model}\n"
+        "---\n"
+        f"<!-- AUTO-GENERATED by tools/sync.py from core/roles/{r['file']} — edit that file, not this one. -->\n\n"
+        f"You are the `{r['role']}` role of research-os. You must receive your full role spec (the entire text of `{r['path']}`) and the line `RULES_HASH=<hash>` **in the task prompt itself**; this wrapper is not a substitute for either.\n\n"
+        "Canary protocol (SCIENTIFIC_RULES §3):\n"
+        f"1. If the prompt has no `RULES_HASH=` line, halt: output `HALT: RULES_HASH missing — rules not loaded` and report instead of working.\n"
+        f"2. If the prompt's hash is not `{h}` (the hash this wrapper was generated with), halt: output `HALT: stale RULES_HASH` and report.\n"
+        "3. If the prompt does not contain the role spec (its `## Hard rules` section), halt: output `HALT: role spec missing` and report.\n"
+        f"4. Otherwise your first output line is exactly `ACK RULES_HASH={h}`, then follow the spec.\n\n"
+        f"Runtime recommendation: model `{r['model']}` → `{model}`, effort {r['effort']} ({r['rationale']}).\n"
+        "Never read `eval/.sealed/`. One dispatch = one complete report.\n"
+        f"{decline}"
+    )
+
+
+def render_skill_wrapper(r: dict, h: str) -> str:
+    rel = f"../../../core/roles/{r['file']}"
+    return (
+        "---\n"
+        f"name: {r['role']}\n"
+        f"description: {r['summary']} (research-os role; canonical spec in {r['path']})\n"
+        f"allowed-tools: Bash(cat ${{CLAUDE_SKILL_DIR}}/*)\n"
+        "metadata:\n"
+        "  research-os: role-wrapper\n"
+        f"  rules-hash: \"{h}\"\n"
+        f"  runtime-model: {r['model']}\n"
+        f"  runtime-effort: {r['effort']}\n"
+        "  generated-by: tools/sync.py\n"
+        "---\n"
+        f"<!-- AUTO-GENERATED by tools/sync.py from core/roles/{r['file']} — edit that file, not this one. -->\n\n"
+        f"RULES_HASH={h}\n\n"
+        f"You are now the `{r['role']}` role of research-os. Your first output line must be exactly `ACK RULES_HASH={h}`. "
+        "The canonical spec below is the authority; this wrapper only loads it.\n\n"
+        f"## Canonical role spec (injected at load time from `{r['path']}`)\n\n"
+        f"!`cat ${{CLAUDE_SKILL_DIR}}/{rel}`\n\n"
+        "## If the spec above did not load\n\n"
+        f"If the section above is empty or shows a command instead of a spec, read `{r['path']}` (relative to the project root; "
+        f"`{rel}` relative to this file) with the Read tool before doing anything else. If it cannot be read, halt: output "
+        "`HALT: role spec missing` and report.\n\n"
+        f"Runtime recommendation: model `{r['model']}`, effort {r['effort']} ({r['rationale']}). "
+        "Claude Code users who want the effort enforced may add the `effort:` extension key to this wrapper's generator, never by hand-editing this file.\n"
+    )
 
 
 def render_condensed(blocks: list[tuple[str, str]]) -> str:
@@ -191,11 +300,14 @@ def render_claude(h: str, blocks, roles) -> str:
         banner("Claude Code"),
         render_common_head("CLAUDE.md — Claude Code adapter for research-os", h),
         "## Condensed rules (verbatim from `core/SCIENTIFIC_RULES.md`)\n\n" + render_condensed(blocks) + "\n",
-        "## Roles (canonical specs in `core/roles/`)\n\n" + render_roster(roles) + "\n",
+        "## Roles (canonical specs in `core/roles/`)\n\n" + render_roster(roles, vendor="claude") + "\n",
         "## Claude Code mechanics\n\n"
-        "- **Shared-context roles** are loaded as skills: `.claude/skills/<role>/SKILL.md` is a thin wrapper "
-        "that reads `core/roles/<role>.md` by relative path and passes the RULES_HASH above. "
+        "- **Shared-context roles** are loaded as skills: `.claude/skills/<role>/SKILL.md` is a generated wrapper "
+        "that injects `core/roles/<role>.md` at load time (dynamic context) and carries the RULES_HASH above. "
         "The spec text is the authority; the wrapper is a pointer.\n"
+        "- **Custom subagents do load the CLAUDE.md hierarchy** (built-in Explore/Plan agents skip it) but never the "
+        "session's auto-memory, and their own body is not guaranteed to reach them on every harness — so the spec "
+        "and hash are embedded in the prompt regardless.\n"
         "- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper "
         "whose body only states that the full spec and RULES_HASH must arrive in the task prompt. "
         "When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line "
@@ -244,28 +356,48 @@ def generate() -> dict[str, bytes]:
     h = rules_hash(data)
     blocks = extract_includes(data.decode("utf-8"))
     roles = load_roles()
-    return {
+    out = {
         "CLAUDE.md": render_claude(h, blocks, roles).encode("utf-8"),
         "AGENTS.md": render_agents(h, blocks, roles).encode("utf-8"),
     }
+    for r in roles:
+        if r["posture"] == "isolated":
+            out[wrapper_path(r)] = render_agent_wrapper(r, h).encode("utf-8")
+        else:
+            out[wrapper_path(r)] = render_skill_wrapper(r, h).encode("utf-8")
+    return out
+
+
+def wrapper_globs(root: Path) -> list[str]:
+    """Every wrapper path that exists on disk under root (to detect orphans)."""
+    found = [str(p.relative_to(root)) for p in (root / ".claude" / "agents").glob("*.md")]
+    found += [str(p.relative_to(root)) for p in (root / ".claude" / "skills").glob("*/SKILL.md")]
+    return sorted(found)
 
 
 def write(out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     for name, content in generate().items():
-        (out_dir / name).write_bytes(content)
+        target = out_dir / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path, default=ROOT, help="output directory (default: repo root)")
     ap.add_argument("--hash", action="store_true", help="print RULES_HASH and exit")
+    ap.add_argument("--list", action="store_true", help="print the adapter paths that would be generated")
     args = ap.parse_args(argv)
     if args.hash:
         print(rules_hash(RULES_PATH.read_bytes()))
         return 0
+    if args.list:
+        print("\n".join(generate().keys()))
+        return 0
+    files = generate()
     write(args.out)
-    print(f"sync.py: wrote {', '.join(ADAPTERS)} to {args.out} (RULES_HASH={rules_hash(RULES_PATH.read_bytes())})")
+    print(f"sync.py: wrote {len(files)} adapters under {args.out} (RULES_HASH={rules_hash(RULES_PATH.read_bytes())})")
     return 0
 
 
