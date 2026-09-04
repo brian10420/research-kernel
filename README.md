@@ -15,6 +15,18 @@ working solo-research setup.
 > sections below describe the pre-migration Claude Code layout and are
 > rewritten in Phase 4.
 
+## Compile layer (Phase 2)
+
+`CLAUDE.md` and `AGENTS.md` at the repo root are **generated** from `core/` by
+`tools/sync.py` and carry `RULES_HASH` (the first 12 hex characters of
+`sha256(core/SCIENTIFIC_RULES.md)`). Never edit them by hand:
+
+```bash
+python3 tools/sync.py          # regenerate both adapters
+python3 tools/check_drift.py   # exit 1 if they disagree with core/
+git config core.hooksPath .githooks   # once per clone: pre-commit refuses stale adapters
+```
+
 ## The team at a glance
 
 ![How the team works with you: seven skills share your session context; four subagents run isolated behind a context boundary](assets/team-map.svg)
