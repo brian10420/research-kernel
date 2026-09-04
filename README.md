@@ -4,6 +4,17 @@
 4 subagents, and a roster contract.** MIT-licensed templates distilled from a
 working solo-research setup.
 
+> **Migration in progress → `research-os` (2026-09-04).** This repository is
+> becoming a provider-neutral Research OS. **Two layers, two homes:**
+> cross-project rules and roles live *in this repository* under
+> [`core/`](core/) (`core/SCIENTIFIC_RULES.md`, `core/roles/`); per-project state
+> (`RESEARCH_STATE`, `DECISIONS`, `EXPERIMENT_LEDGER`, `HYPOTHESES`,
+> `FAILED_IDEAS`, `OPEN_QUESTIONS`) lives *in each research project's own
+> repository*, seeded from [`templates/project-state/`](templates/project-state/).
+> The audit and phase plan: [`MIGRATION_AUDIT.md`](MIGRATION_AUDIT.md). The
+> sections below describe the pre-migration Claude Code layout and are
+> rewritten in Phase 4.
+
 ## The team at a glance
 
 ![How the team works with you: seven skills share your session context; four subagents run isolated behind a context boundary](assets/team-map.svg)
