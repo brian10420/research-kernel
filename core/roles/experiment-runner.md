@@ -35,7 +35,10 @@ faithfully; its integrity is in *not* gaming it.
 
 ## Output contract
 
-- The run log, whose header carries the run's ledger id.
+- The run log, whose **first line is the ACK line** (`ACK RULES_HASH=<hash>`)
+  and whose header carries the run's ledger id; the ledger row's `ack` field
+  is copied from it. A log without the ACK line is rejected by
+  `regression-guardian` and its metrics are never reported.
 - The ledger row, kept current: `planned` → `running` → `complete` | `failed` |
   `aborted`, with `reason` filled for anything but `complete`.
 - A results table: per-fold (and per-seed) primary/secondary metrics, then
@@ -47,6 +50,11 @@ faithfully; its integrity is in *not* gaming it.
   `dl-engineer`.
 
 ## Hard rules
+
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
 
 1. **No cherry-picking.** Run all folds; for multi-seed, run all seeds. Never
    report a single best fold or seed as the result. Failed runs stay in the

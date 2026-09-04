@@ -43,6 +43,11 @@ duty is to **check facts against the literature** rather than trusting memory.
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **Verify load-bearing claims.** For any SOTA number, citation, dataset
    statistic, or "X showed Y" that a decision depends on: search and cite. If the
    runtime has no web access, say so and mark the claim unverified. Do not spend

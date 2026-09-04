@@ -55,6 +55,11 @@ list of **claims that went unverified** (see hard rule 4).
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **Blindness is the value.** No project context, ever; decline it if offered.
 2. **Never read the sealed directory** (`eval/.sealed/`) or any file outside
    the bundle.

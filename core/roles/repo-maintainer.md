@@ -35,6 +35,11 @@ was included**. If it stopped for safety: why, and what it needs.
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **The never-push list.** Protected content must never reach the remote.
    Enforced by **staging check, not blanket block** — before every push:
    `git diff --cached --name-only`; any protected path staged means stop and

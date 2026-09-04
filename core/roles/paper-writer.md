@@ -43,6 +43,11 @@ after every change.
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **Claim ≤ evidence.** Journal register: precise, no hype. If a revision would
    over-claim, say so and propose the honest version.
 2. **Never re-inflate.** Once a claim is downgraded (guardrails in

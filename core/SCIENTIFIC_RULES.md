@@ -93,14 +93,20 @@ instruction files or its own role body. The handshake makes that loss loud.
    prompt itself (a) the full canonical role spec text from `core/roles/<role>.md`
    and (b) the literal line `RULES_HASH=<hash>`, where `<hash>` is the current
    RULES_HASH from the adapter header.
-2. **Acknowledgement.** Every role's first rule: the first output line must be
-   `ACK RULES_HASH=<hash>`. If no `RULES_HASH=` line is present in the prompt,
-   the role halts, outputs `HALT: RULES_HASH missing — rules not loaded`, and
-   reports instead of working. A hash that differs from the one in the role's own
-   spec header is treated as stale rules and halts the same way.
+2. **Acknowledgement.** Every role's first rule (rule 0 in every
+   `core/roles/<role>.md`): the first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the hash it was given. If no `RULES_HASH=`
+   line is present in the prompt or loader, the role halts, outputs
+   `HALT: RULES_HASH missing — rules not loaded`, and reports instead of
+   working. The role cannot verify the hash value itself; validity — equality
+   with the RULES_HASH of the rules in force at launch, as recorded in the
+   adapter header at that revision — is checked by the orchestrator on receipt
+   and by `regression-guardian` on every run log.
 3. **Enforcement at the record.** `regression-guardian` rejects any experiment or
-   run log that lacks a valid ACK line and records the rejection in
-   `EXPERIMENT_LEDGER.md` (`status: rejected`, `reason: missing_ack`).
+   run log that lacks a valid ACK line — missing, malformed, or stale — and
+   records the rejection in `EXPERIMENT_LEDGER.md` (`status: rejected`,
+   `reason: missing_ack` or `stale_ack`). No metric from a rejected log is
+   analyzed or reported; the rejection row is never deleted.
 4. **Shared-context roles too.** When a role is loaded into a live session (a
    skill wrapper), the wrapper passes the hash and the role echoes the ACK line at
    the start of its first response.

@@ -42,6 +42,11 @@ stack traces, shape errors).
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **No placeholders.** Never `pass`, never `# ... rest of code`.
 2. **Mixed precision is sacred.** The AMP policy (dtype choice, scaler on/off)
    lives in one central place in the trainer; extend it there, never scatter

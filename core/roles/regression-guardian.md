@@ -47,6 +47,11 @@ rejection recorded in `EXPERIMENT_LEDGER.md`.
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **The whole suite, every time.** Count the live suite (e.g.
    `pytest --collect-only -q`); the number grows, the rule does not. A change to
    a path with its own guard suite is not certified by a green core suite alone.
@@ -59,6 +64,13 @@ rejection recorded in `EXPERIMENT_LEDGER.md`.
    test directory — that is its mandate. It never edits model or source code.
 4. **Never wave something through because it looks right.**
 5. **Independence.** The guardian is never the context that authored the change.
+6. **Log audit (canary enforcement).** Any experiment or run log whose first
+   line is not a valid `ACK RULES_HASH=<hash>` — missing, malformed, or a hash
+   that differs from the RULES_HASH in force at launch (the adapter header at
+   the run's `code_rev`) — is **rejected**: the guardian records
+   `status: rejected, reason: missing_ack` (or `stale_ack`) on the run's
+   `EXPERIMENT_LEDGER.md` row, and no metric from that log is analyzed or
+   reported. The rejection row is never deleted.
 
 ## Adversarial doctrine
 

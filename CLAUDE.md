@@ -4,10 +4,10 @@
 
 # CLAUDE.md — Claude Code adapter for research-os
 
-RULES_HASH = bb38ee94c2d1
+RULES_HASH = 3dcb9d922543
 
-Canary line to embed verbatim in every agent prompt: `RULES_HASH=bb38ee94c2d1`
-Expected first output line of every role: `ACK RULES_HASH=bb38ee94c2d1`
+Canary line to embed verbatim in every agent prompt: `RULES_HASH=3dcb9d922543`
+Expected first output line of every role: `ACK RULES_HASH=3dcb9d922543`
 
 ## Where truth lives (pointer map)
 
@@ -73,14 +73,20 @@ instruction files or its own role body. The handshake makes that loss loud.
    prompt itself (a) the full canonical role spec text from `core/roles/<role>.md`
    and (b) the literal line `RULES_HASH=<hash>`, where `<hash>` is the current
    RULES_HASH from the adapter header.
-2. **Acknowledgement.** Every role's first rule: the first output line must be
-   `ACK RULES_HASH=<hash>`. If no `RULES_HASH=` line is present in the prompt,
-   the role halts, outputs `HALT: RULES_HASH missing — rules not loaded`, and
-   reports instead of working. A hash that differs from the one in the role's own
-   spec header is treated as stale rules and halts the same way.
+2. **Acknowledgement.** Every role's first rule (rule 0 in every
+   `core/roles/<role>.md`): the first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the hash it was given. If no `RULES_HASH=`
+   line is present in the prompt or loader, the role halts, outputs
+   `HALT: RULES_HASH missing — rules not loaded`, and reports instead of
+   working. The role cannot verify the hash value itself; validity — equality
+   with the RULES_HASH of the rules in force at launch, as recorded in the
+   adapter header at that revision — is checked by the orchestrator on receipt
+   and by `regression-guardian` on every run log.
 3. **Enforcement at the record.** `regression-guardian` rejects any experiment or
-   run log that lacks a valid ACK line and records the rejection in
-   `EXPERIMENT_LEDGER.md` (`status: rejected`, `reason: missing_ack`).
+   run log that lacks a valid ACK line — missing, malformed, or stale — and
+   records the rejection in `EXPERIMENT_LEDGER.md` (`status: rejected`,
+   `reason: missing_ack` or `stale_ack`). No metric from a rejected log is
+   analyzed or reported; the rejection row is never deleted.
 4. **Shared-context roles too.** When a role is loaded into a live session (a
    skill wrapper), the wrapper passes the hash and the role echoes the ACK line at
    the start of its first response.
@@ -135,7 +141,7 @@ instruction files or its own role body. The handshake makes that loss loud.
 ## Claude Code mechanics
 
 - **Shared-context roles** are loaded as skills: `.claude/skills/<role>/SKILL.md` is a thin wrapper that reads `core/roles/<role>.md` by relative path and passes the RULES_HASH above. The spec text is the authority; the wrapper is a pointer.
-- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper whose body only states that the full spec and RULES_HASH must arrive in the task prompt. When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line `RULES_HASH=bb38ee94c2d1` into the prompt yourself — subagents may not inherit this file or their agent body.
+- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper whose body only states that the full spec and RULES_HASH must arrive in the task prompt. When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line `RULES_HASH=3dcb9d922543` into the prompt yourself — subagents may not inherit this file or their agent body.
 - **Missing ACK is a loud failure.** A role whose first line is not `ACK RULES_HASH=…` did not load the rules; stop and re-dispatch. `regression-guardian` rejects run logs without it.
 - **Blind review:** never hand `blind-reviewer` anything but the bundle produced by `tools/anonymize.py`; `eval/.sealed/` is off-limits to reviewers.
 - **Model routing:** `inherit` for reasoning-heavy roles, a smaller model for mechanical roles; no role pins a paid tier. Concrete tool and plugin names (artifact publishing, design canvas, web search, research-report pipelines) are project-overlay matters, not part of the canonical specs.

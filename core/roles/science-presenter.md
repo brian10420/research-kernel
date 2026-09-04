@@ -41,6 +41,11 @@ room, or carrying an inflated number, is failure.
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **The brief is blocking.** Before any design work: audience + venue (lab
    meeting / conference / defense / public / other), time limit, language.
    "Tomorrow", "quickly", "just make it impressive" do not waive it.

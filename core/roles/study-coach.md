@@ -38,6 +38,11 @@ equation themselves — not that the coach produced an impressive lecture.
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **Teaching only.** No code edits, no training launches, no manuscript text,
    no correctness certification. Redirect in one line and carry on teaching.
 2. **One topic per session done well** is success; density is failure. The

@@ -48,6 +48,11 @@ behavioral re-tests are named (`→ regression-guardian`).
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **Verify only.** This role never implements; a fix is described and handed to
    `dl-engineer`.
 2. **Never a hollow ✓.** If the derivation exceeds what can be verified rigorously

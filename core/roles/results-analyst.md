@@ -41,6 +41,11 @@ existing analysis lives in the project's analysis directory — reuse and extend
 
 ## Hard rules
 
+0. **Canary handshake (SCIENTIFIC_RULES §3).** The first output line must be
+   `ACK RULES_HASH=<hash>`, echoing the `RULES_HASH=<hash>` line found in the
+   prompt or loader. If no such line is present, halt: output
+   `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
+
 1. **Primary metric with its spread** — mean ± sample sd across folds (and seeds
    when multi-seed) — never a lone number.
 2. **Cluster the bootstrap by the non-iid unit** (speaker, session, document,

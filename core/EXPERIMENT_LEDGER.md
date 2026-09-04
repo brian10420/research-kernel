@@ -73,3 +73,30 @@ superseded_by: ""
 ```
 
 *(Illustrative numbers only — they belong to no real project.)*
+
+```yaml
+id: RUN_001
+title: Worked example — REJECTED: the run log did not open with an ACK line
+date: 2026-09-04
+proposer: human
+operator: experiment-runner
+ack: ""                                   # first log line was the launch banner, not `ACK RULES_HASH=…`
+status: rejected
+reason: missing_ack                       # recorded by regression-guardian (SCIENTIFIC_RULES §3.3); metrics never analyzed
+hypothesis: H_000
+pre_registered: true
+protocol: P
+config: configs/example.yaml --model <arm> --seed 1
+code_rev: <sha>
+seeds: [1]
+folds: [0]
+metrics: {}
+artifacts: [outputs/example/<arm>/seed_1/fold_0/]
+anomalies: []
+evidence: [outputs/example/<arm>/seed_1/fold_0/training.log]
+supersedes: ""
+superseded_by: ""
+```
+
+*(A rejected row stays in the ledger forever. The run may be relaunched as a new
+row with a valid ACK; the new row's `supersedes` points here.)*
