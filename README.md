@@ -1,10 +1,12 @@
-# research-os
+# research-kernel
+
+> Built on the provider-neutral **research-os** architecture; internal schemas keep the `research-os/` namespace.
 
 **A provider-neutral Research OS: the research methodology and its decision
 history are the canonical asset; every AI vendor is a replaceable runtime
 reached through generated adapters.** MIT-licensed. Formerly
 `claude_research_team` (a Claude Code skill collection); the GitHub rename to
-`research-os` is pending — see [`MIGRATION_AUDIT.md`](MIGRATION_AUDIT.md).
+`research-kernel` is pending — see [`MIGRATION_AUDIT.md`](MIGRATION_AUDIT.md).
 
 ## Two layers, two homes
 

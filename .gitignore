@@ -7,3 +7,4 @@ __pycache__/
 eval/.sealed/*
 !eval/.sealed/README.md
 !eval/.sealed/.gitkeep
+.~lock.*#

@@ -110,8 +110,8 @@ id: DECISION_002
 title: Freeze eval/RUBRIC.md v1 and eval/PROTOCOL.md v1 as the pre-registered evaluation
 date: 2026-09-04
 proposer: fable          # drafted in Phase 6 of the migration
-decided_by: ""           # a human freezes; until then the rubric is pre-registered but not frozen
-status: proposed
+decided_by: human        # ratified 2026-09-05
+status: accepted
 evidence: [eval/RUBRIC.md, eval/PROTOCOL.md]
 supersedes: ""
 superseded_by: ""
