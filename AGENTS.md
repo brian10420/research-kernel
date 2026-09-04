@@ -4,10 +4,10 @@
 
 # AGENTS.md — harness-neutral adapter for research-os
 
-RULES_HASH = 0342dab5c274
+RULES_HASH = df360105ce91
 
-Canary line to embed verbatim in every agent prompt: `RULES_HASH=0342dab5c274`
-Expected first output line of every role: `ACK RULES_HASH=0342dab5c274`
+Canary line to embed verbatim in every agent prompt: `RULES_HASH=df360105ce91`
+Expected first output line of every role: `ACK RULES_HASH=df360105ce91`
 
 ## Where truth lives (pointer map)
 
@@ -124,6 +124,15 @@ instruction files or its own role body. The handshake makes that loss loud.
 | unvalidated ideas (any proposer) | HYPOTHESES.md, with provenance |
 | model-speculated ideas | never directly into durable memory |
 
+Agent memory (any backend, including a harness's own auto-memory) **may store:**
+environment quirks and workarounds, commands and their flags, paths, tool and
+harness gotchas, hardware limits, flaky-test notes, formatting preferences.
+It **may not store:** methodological rules, design decisions or their
+rationale, experiment results or metric values, hypotheses or ideas from any
+proposer, anything a paper could cite, personal data beyond what a command
+needs, secrets. When memory contradicts git, memory loses: the memory-curator
+proposes `memory_forget`; nobody edits `core/` to match memory.
+
 ## Roles (canonical specs in `core/roles/`)
 
 | role | posture | runtime (recommendation) | spec | wrapper |
@@ -132,6 +141,7 @@ instruction files or its own role body. The handshake makes that loss loud.
 | `dl-engineer` | shared-context | model `inherit`, effort session-default | `core/roles/dl-engineer.md` | `—` |
 | `experiment-runner` | isolated | model `smaller-tier`, effort medium | `core/roles/experiment-runner.md` | `—` |
 | `math-reviewer` | shared-context | model `inherit`, effort high | `core/roles/math-reviewer.md` | `—` |
+| `memory-curator` | shared-context | model `smaller-tier`, effort medium | `core/roles/memory-curator.md` | `—` |
 | `paper-writer` | shared-context | model `inherit`, effort session-default | `core/roles/paper-writer.md` | `—` |
 | `regression-guardian` | isolated | model `inherit`, effort high | `core/roles/regression-guardian.md` | `—` |
 | `repo-maintainer` | isolated | model `smaller-tier`, effort medium | `core/roles/repo-maintainer.md` | `—` |
@@ -143,8 +153,8 @@ instruction files or its own role body. The handshake makes that loss loud.
 ## Loading a role (any agent runtime)
 
 1. Read `core/roles/<role>.md` in full.
-2. Put its entire text plus the line `RULES_HASH=0342dab5c274` into the agent's instructions or task prompt. Do not rely on the runtime inheriting this file.
-3. Expect `ACK RULES_HASH=0342dab5c274` as the agent's first output line; anything else means the rules were not loaded — stop and re-dispatch.
+2. Put its entire text plus the line `RULES_HASH=df360105ce91` into the agent's instructions or task prompt. Do not rely on the runtime inheriting this file.
+3. Expect `ACK RULES_HASH=df360105ce91` as the agent's first output line; anything else means the rules were not loaded — stop and re-dispatch.
 4. Isolated roles (`blind-reviewer`, `experiment-runner`, `regression-guardian`, `repo-maintainer`) run in a fresh context with only their inputs; shared-context roles run inside the operator's session.
 5. `blind-reviewer` receives only the output of `tools/anonymize.py`; no runtime may read `eval/.sealed/` on a reviewer's behalf.
 6. Model choice is a recommendation (`inherit` for reasoning-heavy roles, a smaller model for mechanical roles); never a vendor or paid-tier requirement.

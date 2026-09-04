@@ -40,10 +40,10 @@ legacy/                   the pre-migration Claude-specific originals (not loade
 
 ## The roles
 
-Eleven canonical roles in [`core/roles/`](core/roles/README.md): seven
+Twelve canonical roles in [`core/roles/`](core/roles/README.md): eight
 *shared-context* roles that work inside your session (`math-reviewer`,
 `dl-engineer`, `research-mentor`, `results-analyst`, `paper-writer`,
-`study-coach`, `science-presenter`) and four *isolated* roles dispatched with a
+`study-coach`, `science-presenter`, `memory-curator`) and four *isolated* roles dispatched with a
 fresh context (`blind-reviewer`, `experiment-runner`, `regression-guardian`,
 `repo-maintainer`). Every spec has a purpose, an input contract, an output
 contract, hard rules (rule 0 is always the canary handshake), and a `runtime:`

@@ -4,10 +4,10 @@
 
 # CLAUDE.md — Claude Code adapter for research-os
 
-RULES_HASH = 0342dab5c274
+RULES_HASH = df360105ce91
 
-Canary line to embed verbatim in every agent prompt: `RULES_HASH=0342dab5c274`
-Expected first output line of every role: `ACK RULES_HASH=0342dab5c274`
+Canary line to embed verbatim in every agent prompt: `RULES_HASH=df360105ce91`
+Expected first output line of every role: `ACK RULES_HASH=df360105ce91`
 
 ## Where truth lives (pointer map)
 
@@ -124,6 +124,15 @@ instruction files or its own role body. The handshake makes that loss loud.
 | unvalidated ideas (any proposer) | HYPOTHESES.md, with provenance |
 | model-speculated ideas | never directly into durable memory |
 
+Agent memory (any backend, including a harness's own auto-memory) **may store:**
+environment quirks and workarounds, commands and their flags, paths, tool and
+harness gotchas, hardware limits, flaky-test notes, formatting preferences.
+It **may not store:** methodological rules, design decisions or their
+rationale, experiment results or metric values, hypotheses or ideas from any
+proposer, anything a paper could cite, personal data beyond what a command
+needs, secrets. When memory contradicts git, memory loses: the memory-curator
+proposes `memory_forget`; nobody edits `core/` to match memory.
+
 ## Roles (canonical specs in `core/roles/`)
 
 | role | posture | runtime (recommendation) | spec | wrapper |
@@ -132,6 +141,7 @@ instruction files or its own role body. The handshake makes that loss loud.
 | `dl-engineer` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/dl-engineer.md` | `.claude/skills/dl-engineer/SKILL.md` |
 | `experiment-runner` | isolated | model `sonnet (`smaller-tier`)`, effort medium | `core/roles/experiment-runner.md` | `.claude/agents/experiment-runner.md` |
 | `math-reviewer` | shared-context | model `inherit (`inherit`)`, effort high | `core/roles/math-reviewer.md` | `.claude/skills/math-reviewer/SKILL.md` |
+| `memory-curator` | shared-context | model `sonnet (`smaller-tier`)`, effort medium | `core/roles/memory-curator.md` | `.claude/skills/memory-curator/SKILL.md` |
 | `paper-writer` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/paper-writer.md` | `.claude/skills/paper-writer/SKILL.md` |
 | `regression-guardian` | isolated | model `inherit (`inherit`)`, effort high | `core/roles/regression-guardian.md` | `.claude/agents/regression-guardian.md` |
 | `repo-maintainer` | isolated | model `sonnet (`smaller-tier`)`, effort medium | `core/roles/repo-maintainer.md` | `.claude/agents/repo-maintainer.md` |
@@ -144,7 +154,7 @@ instruction files or its own role body. The handshake makes that loss loud.
 
 - **Shared-context roles** are loaded as skills: `.claude/skills/<role>/SKILL.md` is a generated wrapper that injects `core/roles/<role>.md` at load time (dynamic context) and carries the RULES_HASH above. The spec text is the authority; the wrapper is a pointer.
 - **Custom subagents do load the CLAUDE.md hierarchy** (built-in Explore/Plan agents skip it) but never the session's auto-memory, and their own body is not guaranteed to reach them on every harness — so the spec and hash are embedded in the prompt regardless.
-- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper whose body only states that the full spec and RULES_HASH must arrive in the task prompt. When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line `RULES_HASH=0342dab5c274` into the prompt yourself — subagents may not inherit this file or their agent body.
+- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper whose body only states that the full spec and RULES_HASH must arrive in the task prompt. When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line `RULES_HASH=df360105ce91` into the prompt yourself — subagents may not inherit this file or their agent body.
 - **Missing ACK is a loud failure.** A role whose first line is not `ACK RULES_HASH=…` did not load the rules; stop and re-dispatch. `regression-guardian` rejects run logs without it.
 - **Blind review:** never hand `blind-reviewer` anything but the bundle produced by `tools/anonymize.py`; `eval/.sealed/` is off-limits to reviewers.
 - **Model routing:** `inherit` for reasoning-heavy roles, a smaller model for mechanical roles; no role pins a paid tier. Concrete tool and plugin names (artifact publishing, design canvas, web search, research-report pipelines) are project-overlay matters, not part of the canonical specs.

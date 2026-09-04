@@ -20,6 +20,7 @@ spec text is the authority, the wrapper is a pointer.
 | [`experiment-runner`](experiment-runner.md) | **isolated** | launch and babysit runs; protocol verbatim; ledger rows | cherry-pick; deviate from protocol |
 | [`regression-guardian`](regression-guardian.md) | **isolated** | the silent-bug gate; whole suite; writes missing tests | fix code; certify from a partial run |
 | [`repo-maintainer`](repo-maintainer.md) | **isolated** | git/GitHub with the never-push list | push protected content; forced push unasked |
+| [`memory-curator`](memory-curator.md) | shared-context | janitor for the recall layer: route facts, audit memory against git, propose session-end distillation | gatekeep; edit `core/`; commit a scientific claim |
 
 **Posture** is the load-bearing design decision. *Shared-context* roles join
 the operator's session and see everything — discussion, design, revision,

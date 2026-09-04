@@ -147,6 +147,15 @@ instruction files or its own role body. The handshake makes that loss loud.
 | experiment results | EXPERIMENT_LEDGER.md |
 | unvalidated ideas (any proposer) | HYPOTHESES.md, with provenance |
 | model-speculated ideas | never directly into durable memory |
+
+Agent memory (any backend, including a harness's own auto-memory) **may store:**
+environment quirks and workarounds, commands and their flags, paths, tool and
+harness gotchas, hardware limits, flaky-test notes, formatting preferences.
+It **may not store:** methodological rules, design decisions or their
+rationale, experiment results or metric values, hypotheses or ideas from any
+proposer, anything a paper could cite, personal data beyond what a command
+needs, secrets. When memory contradicts git, memory loses: the memory-curator
+proposes `memory_forget`; nobody edits `core/` to match memory.
 <!-- /adapter:include -->
 
 ## 6. Distillation rule
