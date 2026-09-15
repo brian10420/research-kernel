@@ -78,10 +78,63 @@ fresh context (`blind-reviewer`, `experiment-runner`, `regression-guardian`,
 contract, hard rules (rule 0 is always the canary handshake), and a `runtime:`
 recommendation that never pins a vendor or a paid tier.
 
+## The team at a glance
+
 The diagrams in [`assets/`](assets/) show the **Claude Code runtime view** of
-the same team (skills inside the session, subagents behind a context boundary,
-the guardian as the only gate); they predate the migration and remain accurate
-for that runtime.
+the same team: skills inside the session, subagents behind a context boundary,
+the guardian as the only gate.
+
+![How the team works with you: eight skills share your session context; four subagents run isolated behind a context boundary; every role carries an effort badge set by its task shape](assets/team-map.svg)
+
+**In one sentence:** eight skills sit *inside* your conversation and see
+everything you see, four subagents work *outside* it — you send a task brief
+across the boundary, they send back one report — every hand-off passes through
+you, and every role's effort is fixed by its task shape, never by how stuck it
+is.
+
+### Reading the map in detail
+
+- **Enclosure is the message.** The two tinted zones are the diagram's core
+  claim: left = one shared context (the skills collaborate with your full
+  conversation), right = isolated contexts (the subagents never see it). No
+  role talks to another directly — the map has no role-to-role edge at all.
+- **The dispatch bus crosses the boundary exactly twice**, labeled `task brief`
+  (out) and `one report` (back). That two-arrow interface is the whole contract
+  with an isolated role.
+- **The hexagon is the gate.** `regression-guardian` is the only hexagon and
+  the only amber on the page: after any risky code change it independently
+  certifies (✓) or sends the work back (✗ — through you) — the author never
+  certifies their own change.
+- **The badge on each role is its effort**, exactly as `core/effort_policy.yaml`
+  enforces it: `xhigh` on the two closed-verification roles, `low · small model`
+  on the two mechanical ones, `session` on the other eight, which inherit your
+  session default. No badge reads `max`.
+- **The switch under YOU is yours.** `max` is never pinned on a role: a role can
+  only *ask* for it — that is the dotted arrow back to you, the one dotted line
+  on the page — and you raise the session effort and lower it again.
+- **The outer frame is the plugin.** Everything inside it is replaced wholesale
+  by a plugin update, which is why your project's facts live in the one document
+  inside the session zone, `.claude/research-kernel.overlay.md`, read on
+  activation.
+- **Line grammar:** solid arrow = a hand-off carrying work; thin plain line =
+  membership (nothing moves); dashed = the context boundary, and nothing else is
+  ever dashed; dotted = a role asking you to move the switch.
+- **Names tell you the mechanism:** a leading `/` means an in-session skill you
+  invoke in the conversation; no slash plus a doubled left edge means a
+  dispatched, isolated subagent. Small tags carry each role's hard rule
+  (`PDF only`, `never-push list`, `never gatekeeps`, `Study Log`, `brief first`).
+
+### The five workflows
+
+![The five workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, the learning cycle back into the Study Log, the presenting lane, and the stuck lane](assets/team-flows.svg)
+
+*Build-and-test runs through the amber gate (with the ✗-reject loop back to
+`/dl-engineer`); the paper loop hands the blind reviewer only the PDF; learning
+cycles back into the Study Log; the present lane starts from verified numbers
+and asks a blocking audience brief before anything is built; and the stuck lane
+escalates the **method** before the effort — restate the claim as a checkable
+test, dispatch a fresh-context role, and only then ask for `/effort max`. Text
+versions live in [`core/roles/README.md`](core/roles/README.md#typical-flows).*
 
 ## Canary handshake (why agents cannot silently lose the rules)
 

@@ -2,13 +2,14 @@
 
 # claude_research_team
 
+> **Diagrams:** the two SVGs this file used to embed were redrawn as team-map v2 (twelve roles, effort badges) and now live under the top-level README, section "The team at a glance". The text below is the frozen pre-migration record and still describes the seven-skill roster.
+
 **A multi-role Claude Code research team for ML research projects — 7 skills,
 4 subagents, and a roster contract.** MIT-licensed templates distilled from a
 working solo-research setup.
 
 ## The team at a glance
 
-![How the team works with you: seven skills share your session context; four subagents run isolated behind a context boundary](assets/team-map.svg)
 
 **In one sentence:** seven skills sit *inside* your conversation and see
 everything you see, four subagents work *outside* it — you send a task brief
@@ -38,7 +39,6 @@ through you.
   `brief first`).
 ### The four workflows
 
-![The four workflows as numbered swimlanes: build-and-test through the amber gate, the paper loop with a PDF-only blind review, the learning cycle back into the Study Log, and the presenting lane from verified numbers to a rehearsed deck](assets/team-flows.svg)
 
 *Build-and-test runs through the amber gate (with the ✗-reject loop back to
 `/dl-engineer`); the paper loop hands the blind reviewer only the PDF; learning
