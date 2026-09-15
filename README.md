@@ -5,8 +5,8 @@
 **A provider-neutral Research OS: the research methodology and its decision
 history are the canonical asset; every AI vendor is a replaceable runtime
 reached through generated adapters.** MIT-licensed. Formerly
-`claude_research_team` (a Claude Code skill collection); the GitHub rename to
-`research-kernel` is pending — see [`MIGRATION_AUDIT.md`](MIGRATION_AUDIT.md).
+`claude_research_team` (a Claude Code skill collection), renamed on GitHub to
+`research-kernel` — see [`MIGRATION_AUDIT.md`](MIGRATION_AUDIT.md).
 
 ## Install in 30 seconds (Claude Code plugin)
 
