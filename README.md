@@ -11,7 +11,7 @@ reached through generated adapters.** MIT-licensed. Formerly
 ## Install in 30 seconds (Claude Code plugin)
 
 ```
-/plugin marketplace add brian10420/claude_research_team   # becomes brian10420/research-kernel after the rename
+/plugin marketplace add brian10420/research-kernel
 /plugin install research-kernel@research-kernel
 /reload-plugins
 ```
