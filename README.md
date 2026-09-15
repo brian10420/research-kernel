@@ -8,6 +8,30 @@ reached through generated adapters.** MIT-licensed. Formerly
 `claude_research_team` (a Claude Code skill collection); the GitHub rename to
 `research-kernel` is pending — see [`MIGRATION_AUDIT.md`](MIGRATION_AUDIT.md).
 
+## Install in 30 seconds (Claude Code plugin)
+
+```
+/plugin marketplace add brian10420/claude_research_team   # becomes brian10420/research-kernel after the rename
+/plugin install research-kernel@research-kernel
+/reload-plugins
+```
+
+The twelve roles then appear namespaced as `/research-kernel:<role>` (skills)
+and as dispatchable subagents. Add your project's facts in **one file the
+plugin never touches**:
+
+```bash
+cp <plugin-cache>/templates/research-kernel.overlay.template.md .claude/research-kernel.overlay.md
+# or fetch the template from this repository; then fill the slots
+```
+
+Every skill injects `.claude/research-kernel.overlay.md` when it loads; isolated
+roles receive it through the dispatch prompt. Nothing inside the plugin is ever
+hand-edited — a plugin update replaces the whole tree, and your overlay survives.
+Copy [`templates/project-state/`](templates/project-state/) into the project as
+well (its README has the commands). The copy-install path is still supported —
+see "Using it without the plugin" below.
+
 ## Two layers, two homes
 
 | layer | lives in | contents |
@@ -28,13 +52,16 @@ core/                     canonical, provider-neutral — edit HERE
   RESEARCH_STATE.md  EXPERIMENT_LEDGER.md  HYPOTHESES.md  FAILED_IDEAS.md
   LITERATURE_MAP.md  OPEN_QUESTIONS.md  STUDY_LOG.md      (schemas + one worked example each)
   roles/                  one spec per role + README roster
+  effort_policy.yaml      which roles carry an enforced Claude Code effort/model (task-shape doctrine)
 CLAUDE.md  AGENTS.md      GENERATED adapters (tools/sync.py) — never hand-edit
-.claude/agents/ .claude/skills/   GENERATED thin wrappers for Claude Code
+.claude/agents/ .claude/skills/   GENERATED self-contained wrappers for Claude Code (spec + rules next to each SKILL.md)
+skills/  agents/          symlinks to .claude/ so the repository is itself the plugin
+.claude-plugin/           plugin.json + marketplace.json (this repository is its own marketplace)
 adapters/codex/           placeholder: AGENTS.md + core/roles are the Codex sources
 tools/                    sync.py · check_drift.py · anonymize.py
 .githooks/pre-commit      refuses commits whose adapters disagree with core/
 templates/project-state/  per-project state files to copy into a research repo
-templates/                Study Log, Presentation Log, session handoff, leak-check pattern
+templates/                Study Log, Presentation Log, session handoff, leak-check pattern, project overlay
 eval/                     pre-registered rubric, blind protocol, task stubs, sealed label maps
 docs/                     design notes, hardening options, memory setup, skill-building process
 legacy/                   the pre-migration Claude-specific originals (not loaded by anything)
@@ -77,22 +104,42 @@ python3 tools/check_drift.py          # exit 1 if any adapter disagrees with cor
 git config core.hooksPath .githooks   # once per clone: pre-commit refuses stale adapters
 ```
 
-## Using it in a research project
+## Using it without the plugin
 
 1. Copy [`templates/project-state/`](templates/project-state/) into the
    project (its README has the exact commands) and write the first
    `RESEARCH_STATE.md` snapshot.
-2. Make `core/` reachable from the project root — vendor this repository as a
-   git submodule or copy `core/`; the generated `.claude/` wrappers resolve
-   `core/roles/<role>.md` **relative to the project root**.
-3. For Claude Code: copy `CLAUDE.md` and `.claude/` from here (or generate them
-   in place with `tools/sync.py`) and add the project's overlay — the
-   project-specific slots listed at the end of every role spec (paths, protocol
-   block, invariants, guards) — to the project's own instruction file, never to
-   `core/`.
+2. For Claude Code: copy `CLAUDE.md` and `.claude/` from here (or generate them
+   in place with `tools/sync.py`). The wrappers are self-contained — each skill
+   directory carries `role.md` and `RULES.md` — so `core/` does **not** need to
+   be reachable from the project root.
+3. Seed the overlay: copy `templates/research-kernel.overlay.template.md` to
+   `.claude/research-kernel.overlay.md` and fill the slots listed at the end
+   of every role spec (paths, protocol block, invariants, guards). Project
+   facts go there and in the state files, never into `core/`.
 4. For any other harness: `AGENTS.md` + `core/roles/` are the sources
    (`adapters/codex/README.md`).
 5. Optional agent memory for environment quirks only: [`docs/memory-setup.md`](docs/memory-setup.md).
+
+## Effort policy (Claude Code)
+
+`core/effort_policy.yaml` decides which wrappers carry an enforced `effort:` /
+`model:` (Claude Code honours these for skills and subagents; effort cannot be
+passed at dispatch time, and `model: inherit` does not inherit effort). The
+doctrine is *task shape decides, up front*:
+
+| task shape | setting | why |
+| --- | --- | --- |
+| closed, single-answer verification (`math-reviewer`, `blind-reviewer`) | `xhigh` | the curve saturates here; `max` buys about one point for ~40 % more tokens |
+| mechanical operations (`experiment-runner`, `repo-maintainer`) | smaller model, `low` | never needs frontier reasoning |
+| everything else | inherits the session | authoring, analysis and dialogue happen at the operator's default |
+| long-horizon work with a signed plan | session default | verification comes from the plan, the pre-registration and the regression gate — not from effort |
+
+No role pins `max`. For an unbounded-judgement step (interpreting a blind
+readout, resolving a record-vs-code contradiction, designing a new statistical
+instrument) the role asks the operator to run `/effort max` and to lower it
+again afterwards. "Stuck" is a reason to change method — restate the claim as a
+checkable test, dispatch a fresh-context role — not to raise effort.
 
 ## Blind review and evaluation
 

@@ -1,0 +1,17 @@
+{
+  "name": "research-kernel",
+  "owner": {
+    "name": "Ting-Yi Lin",
+    "url": "https://github.com/brian10420"
+  },
+  "description": "research-kernel — a provider-neutral Research OS: canonical research roles, a methodological constitution, per-project state templates, and a task-shape effort policy for Claude Code.",
+  "plugins": [
+    {
+      "name": "research-kernel",
+      "source": "./",
+      "description": "Twelve canonical research roles (8 in-session skills + 4 isolated subagents) with the canary handshake, project-state templates, and the effort policy. Install, then seed .claude/research-kernel.overlay.md in your project.",
+      "version": "0.1.0",
+      "license": "MIT"
+    }
+  ]
+}

@@ -72,8 +72,14 @@ roles (`math-reviewer`, `blind-reviewer`, `regression-guardian`) recommend
 `inherit` — run them from the strongest session the plan affords — at high
 effort. Mechanical roles (`experiment-runner`, `repo-maintainer`,
 `memory-curator`) recommend a smaller model at medium effort. Nothing here pins a
-paid tier or a vendor; the `runtime:` block in each spec is a recommendation the
-wrapper may honor.
+paid tier or a vendor; the `runtime:` block in each spec is a recommendation.
+
+What Claude Code actually *enforces* is `core/effort_policy.yaml`: the roles
+listed there get `effort:` / `model:` in their generated wrapper (closed
+verification at `xhigh`, mechanical roles at `low` on a smaller model); everyone
+else inherits the session. Effort is chosen by task shape up front, never by
+"it got stuck"; no role pins `max` — the operator raises the session effort for
+an unbounded-judgement step and lowers it again (DECISION_003).
 
 ## Typical flows
 

@@ -1,0 +1,22 @@
+{
+  "name": "research-kernel",
+  "version": "0.1.0",
+  "description": "Provider-neutral Research OS for Claude Code: twelve canonical research roles (math-reviewer, dl-engineer, research-mentor, results-analyst, paper-writer, study-coach, science-presenter, memory-curator + isolated blind-reviewer, experiment-runner, regression-guardian, repo-maintainer), a methodological constitution with a canary handshake, per-project state templates, and a task-shape effort policy. Project facts live in your project's .claude/research-kernel.overlay.md, never in the plugin.",
+  "author": {
+    "name": "Ting-Yi Lin",
+    "url": "https://github.com/brian10420"
+  },
+  "homepage": "https://github.com/brian10420/claude_research_team",
+  "repository": "https://github.com/brian10420/claude_research_team",
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "scientific-method",
+    "peer-review",
+    "reproducibility",
+    "experiment-tracking",
+    "agents",
+    "skills",
+    "research-os"
+  ]
+}

@@ -1,0 +1,38 @@
+# Claude Code effort policy — consumed by tools/sync.py (stdlib parser; two-level
+# `role:` / `  key: value` only, no lists, no inline maps).
+#
+# The `runtime:` block in each core/roles/<role>.md is the provider-neutral
+# RECOMMENDATION. This file is the Claude Code ENFORCEMENT: for each role listed
+# here sync.py emits `effort:` (and, if given, `model:`) into the generated
+# wrapper's frontmatter, which Claude Code honours while that role is active
+# (skills, commands and subagents alike; effort cannot be passed at dispatch
+# time and `model: inherit` does not inherit effort).
+#
+# Roles NOT listed here inherit the session's effort — the default. Never list a
+# paid tier or a vendor model id; allowed `model:` values are inherit | sonnet |
+# opus | haiku, allowed `effort:` values are low | medium | high | xhigh | max.
+#
+# Doctrine (DECISION_003): effort is chosen by TASK SHAPE, up front.
+#   closed / single-answer work (a derivation check, a referee report)
+#       -> saturates at xhigh; max buys ~1 point for ~40 % more tokens.
+#   mechanical work (launch runs, git hygiene)  -> low on a smaller model.
+#   long-horizon agentic work with a signed plan -> stays at the session default;
+#       the operator raises the SESSION effort (`/effort max`) for an
+#       unbounded-judgement step and lowers it again; roles never pin max.
+#   "stuck" is not a reason to raise effort: restate the claim as a checkable
+#       test, dispatch a fresh-context role, and only then consider max.
+
+math-reviewer:
+  effort: xhigh
+  rationale: closed-form verification saturates at xhigh; max adds ~1 point for ~40 % more tokens
+blind-reviewer:
+  effort: xhigh
+  rationale: one long single-shot judgement per draft — rare and decisive; xhigh is the ceiling of the closed-task curve
+experiment-runner:
+  model: sonnet
+  effort: low
+  rationale: mechanical launch / poll / collect; never needs frontier reasoning
+repo-maintainer:
+  model: sonnet
+  effort: low
+  rationale: mechanical git hygiene; the never-push list is a checklist, not a reasoning task

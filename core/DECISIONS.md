@@ -130,3 +130,55 @@ first run; repetitions per cell are declared before the first run.
 
 **Alternatives rejected.** Grading against an evolving rubric — makes every
 comparison across runs invalid.
+
+---
+
+```yaml
+id: DECISION_003
+title: Ship research-kernel as a self-contained Claude Code plugin; project facts live in an overlay; effort is chosen by task shape
+date: 2026-09-15
+proposer: fable          # drafted from the operator's request to make installation as easy as a marketplace plugin
+decided_by: human
+status: accepted
+evidence: [.claude-plugin/plugin.json, .claude-plugin/marketplace.json, core/effort_policy.yaml, templates/research-kernel.overlay.template.md, tools/sync.py]
+supersedes: ""
+superseded_by: ""
+```
+
+**Context.** Installing the kernel took five manual steps (clone, vendor `core/`,
+copy `CLAUDE.md` + `.claude/`, run `sync.py`, write the overlay into the
+project's instruction file), because the generated skill wrappers resolved
+`core/roles/<role>.md` relative to the project root. A Claude Code plugin lives
+in an immutable, wholesale-replaced cache directory, so that path — and any
+hand-edit inside the plugin — breaks on install or update.
+
+**Decision.** (1) Every generated wrapper is self-contained: a skill directory
+carries `SKILL.md` + `role.md` (verbatim spec) + `RULES.md` (condensed rules)
+and loads only from its own directory; an isolated role's agent file inlines
+its spec. `skills/` and `agents/` at the repository root are symlinks to
+`.claude/`, and `.claude-plugin/{plugin,marketplace.json}` make the repository
+its own marketplace and plugin (`/plugin marketplace add <owner>/<repo>` →
+`/plugin install research-kernel@research-kernel`). (2) Project-specific facts
+live in the consuming project's `.claude/research-kernel.overlay.md` (template
+in `templates/`), injected by every skill at load time and passed to isolated
+roles in the dispatch prompt; nothing inside the plugin is ever edited.
+(3) `core/effort_policy.yaml` is the single, data-driven source of the
+enforced Claude Code `effort:` / `model:` keys: closed verification roles at
+`xhigh`, mechanical roles at `low` on a smaller model, everything else inherits;
+no role pins `max`; the operator raises the *session* effort for an
+unbounded-judgement step; "stuck" is handled by changing method, not effort.
+
+**Consequences.** The copy-install path keeps working and no longer needs
+`core/` in the project. `tools/check_drift.py` covers the new generated files.
+The `runtime:` block in each spec stays a provider-neutral recommendation; the
+policy file is the Claude Code enforcement, and the two may differ on purpose.
+Public pushes still require the private leak-gate to print CLEAN.
+
+**Alternatives rejected.**
+- Keep project-root-relative wrappers and document "vendor `core/`" — breaks
+  inside the plugin cache and on every update.
+- Hand-edit `effort:` into wrappers inside the plugin cache (what a third-party
+  plugin forces its users to do) — silently reverted by the next update.
+- Pin `max` on the reviewer roles — the closed-task curve saturates at `xhigh`;
+  `max` is a session-level decision for long-horizon judgement steps only.
+

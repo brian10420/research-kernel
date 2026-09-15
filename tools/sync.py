@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 """tools/sync.py — compile core/ into every runtime adapter.
 
-Generates, from core/SCIENTIFIC_RULES.md and core/roles/*.md:
+Generates, from core/SCIENTIFIC_RULES.md, core/roles/*.md and core/effort_policy.yaml:
   CLAUDE.md                          Claude Code adapter
   AGENTS.md                          harness-neutral adapter
-  .claude/agents/<role>.md           thin wrapper per ISOLATED role (posture: isolated)
-  .claude/skills/<role>/SKILL.md     thin wrapper per SHARED-CONTEXT role
+  .claude/agents/<role>.md           self-contained wrapper per ISOLATED role (spec inlined)
+  .claude/skills/<role>/SKILL.md     wrapper per SHARED-CONTEXT role — loads the two files next to it
+  .claude/skills/<role>/role.md      verbatim copy of core/roles/<role>.md
+  .claude/skills/<role>/RULES.md     condensed SCIENTIFIC_RULES (the adapter:include blocks)
+
+Every wrapper is self-contained (it never resolves a project-root path), so the
+same generated tree works both copied into a project and installed as a Claude
+Code plugin (`skills/` and `agents/` at the repo root are symlinks to `.claude/`).
+Project-specific facts arrive through `.claude/research-kernel.overlay.md` in the
+consuming project (template: templates/research-kernel.overlay.template.md).
 
 Deterministic: identical core/ bytes produce identical adapter bytes (no
 timestamps, sorted roles, LF newlines). Standard library only.
@@ -45,6 +53,10 @@ TOOL_ORDER = ["Read", "Grep", "Glob", "Bash", "Write", "Edit", "WebSearch", "Web
 # runtime-neutral model class -> Claude Code `model:` value (verified against the live docs 2026-09-04:
 # accepted values are sonnet | opus | haiku | fable | <full id> | inherit). Never a paid-tier pin.
 MODEL_MAP = {"inherit": "inherit", "smaller-tier": "sonnet"}
+POLICY_PATH = CORE / "effort_policy.yaml"
+POLICY_MODELS = {"inherit", "sonnet", "opus", "haiku"}
+POLICY_EFFORTS = {"low", "medium", "high", "xhigh", "max"}
+OVERLAY_REL = ".claude/research-kernel.overlay.md"   # relative to the consuming project's root
 
 INCLUDE_START = "<!-- adapter:include -->"
 INCLUDE_END = "<!-- /adapter:include -->"
@@ -92,15 +104,20 @@ def _clean(value: str) -> str:
 
 
 def parse_frontmatter(text: str) -> dict:
-    """Minimal YAML-subset reader: top-level `key: value` plus one level of nesting."""
+    """Minimal YAML-subset reader for a `---` fenced frontmatter block."""
     if not text.startswith("---\n"):
         return {}
     end = text.find("\n---\n", 4)
     if end < 0:
         return {}
+    return parse_simple_yaml(text[4:end])
+
+
+def parse_simple_yaml(body: str) -> dict:
+    """Top-level `key: value` plus one level of nesting; comments and blanks ignored."""
     data: dict = {}
     current: str | None = None
-    for raw in text[4:end].splitlines():
+    for raw in body.splitlines():
         if not raw.strip() or raw.lstrip().startswith("#"):
             continue
         if raw.startswith("  ") and current is not None:
@@ -119,6 +136,21 @@ def parse_frontmatter(text: str) -> dict:
     return data
 
 
+def load_effort_policy() -> dict[str, dict]:
+    """core/effort_policy.yaml -> {role: {model?, effort?, rationale?}}; validated, absent file = {}."""
+    if not POLICY_PATH.exists():
+        return {}
+    policy = parse_simple_yaml(POLICY_PATH.read_text(encoding="utf-8"))
+    for role, entry in policy.items():
+        if not isinstance(entry, dict):
+            raise SystemExit(f"sync.py: {POLICY_PATH.name}: `{role}` must be a mapping")
+        if "model" in entry and entry["model"] not in POLICY_MODELS:
+            raise SystemExit(f"sync.py: {POLICY_PATH.name}: `{role}.model` must be one of {sorted(POLICY_MODELS)}")
+        if "effort" in entry and entry["effort"] not in POLICY_EFFORTS:
+            raise SystemExit(f"sync.py: {POLICY_PATH.name}: `{role}.effort` must be one of {sorted(POLICY_EFFORTS)}")
+    return policy
+
+
 def _as_list(value) -> list[str]:
     if isinstance(value, list):
         return value
@@ -128,17 +160,31 @@ def _as_list(value) -> list[str]:
     return [v.strip() for v in value.split(",") if v.strip()]
 
 
+def spec_body(text: str) -> str:
+    """The role spec without its frontmatter (what a dispatcher pastes into a prompt)."""
+    if text.startswith("---\n"):
+        end = text.find("\n---\n", 4)
+        if end >= 0:
+            return text[end + 5:].lstrip("\n")
+    return text
+
+
 def load_roles() -> list[dict]:
     roles = []
+    policy = load_effort_policy()
     for path in sorted(ROLES_DIR.glob("*.md")):
         if path.name == "README.md":
             continue
-        fm = parse_frontmatter(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+        fm = parse_frontmatter(text)
         if not fm.get("role"):
             continue
         runtime = fm.get("runtime", {}) if isinstance(fm.get("runtime"), dict) else {}
         roles.append(
             {
+                "policy": policy.get(fm["role"], {}),
+                "spec_bytes": path.read_bytes(),
+                "spec_body": spec_body(text),
                 "role": fm["role"],
                 "posture": fm.get("posture", "?"),
                 "isolation": fm.get("isolation_required", "?"),
@@ -202,6 +248,33 @@ def wrapper_path(r: dict) -> str:
     return f".claude/skills/{r['role']}/SKILL.md"
 
 
+def skill_dir(r: dict) -> str:
+    return f".claude/skills/{r['role']}"
+
+
+def policy_lines(r: dict) -> str:
+    """`model:` / `effort:` frontmatter keys enforced by core/effort_policy.yaml (empty when unlisted)."""
+    out = ""
+    if "model" in r["policy"]:
+        out += f"model: {r['policy']['model']}\n"
+    if "effort" in r["policy"]:
+        out += f"effort: {r['policy']['effort']}\n"
+    return out
+
+
+def policy_sentence(r: dict) -> str:
+    p = r["policy"]
+    if not p:
+        return "Claude Code effort policy (`core/effort_policy.yaml`): not listed — inherits the session effort."
+    bits = []
+    if "model" in p:
+        bits.append(f"model `{p['model']}`")
+    if "effort" in p:
+        bits.append(f"effort `{p['effort']}`")
+    why = f" — {p['rationale']}" if p.get("rationale") else ""
+    return f"Claude Code effort policy (`core/effort_policy.yaml`): {', '.join(bits)}{why}."
+
+
 def claude_tools(r: dict) -> str:
     names: list[str] = []
     for cap in r["capabilities"]:
@@ -212,7 +285,8 @@ def claude_tools(r: dict) -> str:
 
 
 def render_agent_wrapper(r: dict, h: str) -> str:
-    model = MODEL_MAP.get(r["model"], r["model"])
+    model = r["policy"].get("model") or MODEL_MAP.get(r["model"], r["model"])
+    effort_line = f"effort: {r['policy']['effort']}\n" if "effort" in r["policy"] else ""
     tools = claude_tools(r)
     tools_line = f"tools: {tools}\n" if tools else ""
     decline = (
@@ -225,46 +299,68 @@ def render_agent_wrapper(r: dict, h: str) -> str:
         f"description: {r['summary']} ISOLATED role of research-os — dispatch only with the full canonical spec and the RULES_HASH line in the task prompt (canary protocol).\n"
         f"{tools_line}"
         f"model: {model}\n"
+        f"{effort_line}"
         "---\n"
         f"<!-- AUTO-GENERATED by tools/sync.py from core/roles/{r['file']} — edit that file, not this one. -->\n\n"
-        f"You are the `{r['role']}` role of research-os. You must receive your full role spec (the entire text of `{r['path']}`) and the line `RULES_HASH=<hash>` **in the task prompt itself**; this wrapper is not a substitute for either.\n\n"
+        f"You are the `{r['role']}` role of research-kernel. Your canonical spec is inlined below; the line `RULES_HASH=<hash>` must still arrive **in the task prompt itself** (subagents may not receive this body on every harness, so dispatchers keep pasting the spec too).\n\n"
         "Canary protocol (SCIENTIFIC_RULES §3):\n"
         f"1. If the prompt has no `RULES_HASH=` line, halt: output `HALT: RULES_HASH missing — rules not loaded` and report instead of working.\n"
         f"2. If the prompt's hash is not `{h}` (the hash this wrapper was generated with), halt: output `HALT: stale RULES_HASH` and report.\n"
-        "3. If the prompt does not contain the role spec (its `## Hard rules` section), halt: output `HALT: role spec missing` and report.\n"
+        "3. If neither the prompt nor this body contains the role spec (its `## Hard rules` section), halt: output `HALT: role spec missing` and report.\n"
         f"4. Otherwise your first output line is exactly `ACK RULES_HASH={h}`, then follow the spec.\n\n"
-        f"Runtime recommendation: model `{r['model']}` → `{model}`, effort {r['effort']} ({r['rationale']}).\n"
-        "Never read `eval/.sealed/`. One dispatch = one complete report.\n"
-        f"{decline}"
+        f"Runtime recommendation: model `{r['model']}` → `{model}`, effort {r['effort']} ({r['rationale']}). {policy_sentence(r)}\n"
+        "Never read `eval/.sealed/`. One dispatch = one complete report. "
+        f"Project-specific facts (paths, protocol, guards) come from the dispatch prompt or the project's `{OVERLAY_REL}`, never from edits to this file.\n"
+        f"{decline}\n"
+        f"---\n\n## Canonical role spec (inlined verbatim from `{r['path']}`)\n\n"
+        f"{r['spec_body'].rstrip()}\n"
     )
 
 
 def render_skill_wrapper(r: dict, h: str) -> str:
-    rel = f"../../../core/roles/{r['file']}"
     return (
         "---\n"
         f"name: {r['role']}\n"
-        f"description: {r['summary']} (research-os role; canonical spec in {r['path']})\n"
-        f"allowed-tools: Bash(cat ${{CLAUDE_SKILL_DIR}}/*)\n"
+        f"description: {r['summary']} (research-kernel role; canonical spec in {r['path']})\n"
+        f"allowed-tools: Bash(cat ${{CLAUDE_SKILL_DIR}}/*), Bash(cat ${{CLAUDE_PROJECT_DIR}}/{OVERLAY_REL})\n"
+        f"{policy_lines(r)}"
         "metadata:\n"
         "  research-os: role-wrapper\n"
         f"  rules-hash: \"{h}\"\n"
         f"  runtime-model: {r['model']}\n"
         f"  runtime-effort: {r['effort']}\n"
+        f"  effort-policy: {r['policy'].get('effort', 'inherit')}\n"
         "  generated-by: tools/sync.py\n"
         "---\n"
         f"<!-- AUTO-GENERATED by tools/sync.py from core/roles/{r['file']} — edit that file, not this one. -->\n\n"
         f"RULES_HASH={h}\n\n"
-        f"You are now the `{r['role']}` role of research-os. Your first output line must be exactly `ACK RULES_HASH={h}`. "
-        "The canonical spec below is the authority; this wrapper only loads it.\n\n"
-        f"## Canonical role spec (injected at load time from `{r['path']}`)\n\n"
-        f"!`cat ${{CLAUDE_SKILL_DIR}}/{rel}`\n\n"
-        "## If the spec above did not load\n\n"
-        f"If the section above is empty or shows a command instead of a spec, read `{r['path']}` (relative to the project root; "
-        f"`{rel}` relative to this file) with the Read tool before doing anything else. If it cannot be read, halt: output "
-        "`HALT: role spec missing` and report.\n\n"
-        f"Runtime recommendation: model `{r['model']}`, effort {r['effort']} ({r['rationale']}). "
-        "Claude Code users who want the effort enforced may add the `effort:` extension key to this wrapper's generator, never by hand-editing this file.\n"
+        f"You are now the `{r['role']}` role of research-kernel. Your first output line must be exactly `ACK RULES_HASH={h}`. "
+        "The canonical spec below is the authority; this wrapper only loads it. Everything it loads sits next to this file, "
+        "so it works unchanged whether this tree was copied into a project or installed as a Claude Code plugin.\n\n"
+        "## Condensed methodological rules (injected from `RULES.md` next to this file)\n\n"
+        f"!`cat ${{CLAUDE_SKILL_DIR}}/RULES.md`\n\n"
+        f"## Canonical role spec (injected from `role.md` next to this file — a verbatim copy of `{r['path']}`)\n\n"
+        f"!`cat ${{CLAUDE_SKILL_DIR}}/role.md`\n\n"
+        f"## Project overlay (injected from `{OVERLAY_REL}` in the consuming project, if present)\n\n"
+        f"!`cat ${{CLAUDE_PROJECT_DIR:-.}}/{OVERLAY_REL} 2>/dev/null || echo \"(no project overlay at {OVERLAY_REL} — running on the generic spec; seed one from templates/research-kernel.overlay.template.md)\"`\n\n"
+        "The overlay holds the project's facts for this role's \"Project overlay slots\" (paths, protocol, invariants, guards). "
+        "It is the ONLY place project-specific content belongs: never edit `role.md`, `RULES.md` or this wrapper — they are "
+        "regenerated by `tools/sync.py` and replaced wholesale on every plugin update.\n\n"
+        "## If a section above did not load\n\n"
+        "If a section is empty or shows a command instead of content, read `role.md` and `RULES.md` from this skill's own "
+        "directory with the Read tool before doing anything else (never a project-root path). If `role.md` cannot be read, "
+        "halt: output `HALT: role spec missing` and report. A missing overlay is not an error.\n\n"
+        f"Runtime recommendation (provider-neutral, from the spec): model `{r['model']}`, effort {r['effort']} ({r['rationale']}). "
+        f"{policy_sentence(r)} Change either only through `core/`, never by hand-editing this file.\n"
+    )
+
+
+def render_rules_file(h: str, blocks) -> str:
+    return (
+        "<!-- AUTO-GENERATED by tools/sync.py from core/SCIENTIFIC_RULES.md (adapter:include blocks) — edit core/, not this file. -->\n"
+        f"# Condensed rules — RULES_HASH={h}\n\n"
+        + render_condensed(blocks)
+        + "\n"
     )
 
 
@@ -303,8 +399,20 @@ def render_claude(h: str, blocks, roles) -> str:
         "## Roles (canonical specs in `core/roles/`)\n\n" + render_roster(roles, vendor="claude") + "\n",
         "## Claude Code mechanics\n\n"
         "- **Shared-context roles** are loaded as skills: `.claude/skills/<role>/SKILL.md` is a generated wrapper "
-        "that injects `core/roles/<role>.md` at load time (dynamic context) and carries the RULES_HASH above. "
-        "The spec text is the authority; the wrapper is a pointer.\n"
+        "that injects `role.md` (a verbatim copy of `core/roles/<role>.md`) and `RULES.md` from its own directory at "
+        "load time and carries the RULES_HASH above. The spec text is the authority; the wrapper is a pointer.\n"
+        "- **Plugin install.** `skills/` and `agents/` at the repository root are symlinks to `.claude/`, and "
+        "`.claude-plugin/{plugin,marketplace}.json` make this repository a Claude Code marketplace + plugin "
+        "(`/plugin marketplace add <owner>/<repo>` then `/plugin install research-kernel@research-kernel`); skills "
+        "then appear as `/research-kernel:<role>`. Nothing in the plugin is ever hand-edited — updates replace it.\n"
+        f"- **Project overlay.** Project-specific facts live in the consuming project's `{OVERLAY_REL}` "
+        "(template: `templates/research-kernel.overlay.template.md`); every skill wrapper injects it when present. "
+        "That file, plus the project-state files, is the only place a project's facts belong.\n"
+        "- **Effort policy.** `core/effort_policy.yaml` decides which wrappers carry `effort:` / `model:` "
+        "frontmatter (honoured by Claude Code for skills and subagents; not passable at dispatch time). Effort is "
+        "chosen by task shape up front — closed verification saturates at xhigh, mechanical roles run low on a "
+        "smaller model, long-horizon work stays at the session default and the operator raises the SESSION effort "
+        "for an unbounded-judgement step; no role pins max, and \"stuck\" is a reason to change method, not effort.\n"
         "- **Custom subagents do load the CLAUDE.md hierarchy** (built-in Explore/Plan agents skip it) but never the "
         "session's auto-memory, and their own body is not guaranteed to reach them on every harness — so the spec "
         "and hash are embedded in the prompt regardless.\n"
@@ -317,7 +425,7 @@ def render_claude(h: str, blocks, roles) -> str:
         "- **Blind review:** never hand `blind-reviewer` anything but the bundle produced by "
         "`tools/anonymize.py`; `eval/.sealed/` is off-limits to reviewers.\n"
         "- **Model routing:** `inherit` for reasoning-heavy roles, a smaller model for mechanical roles; "
-        "no role pins a paid tier. Concrete tool and plugin names (artifact publishing, design canvas, "
+        "no role pins a paid tier or a vendor model id. Concrete tool and plugin names (artifact publishing, design canvas, "
         "web search, research-report pipelines) are project-overlay matters, not part of the canonical specs.\n"
         "- **Never edit this file or `AGENTS.md` by hand.** Edit `core/`, run `python3 tools/sync.py`, commit both. "
         "The pre-commit hook (`git config core.hooksPath .githooks`) refuses commits with stale adapters.\n",
@@ -360,18 +468,21 @@ def generate() -> dict[str, bytes]:
         "CLAUDE.md": render_claude(h, blocks, roles).encode("utf-8"),
         "AGENTS.md": render_agents(h, blocks, roles).encode("utf-8"),
     }
+    rules_file = render_rules_file(h, blocks).encode("utf-8")
     for r in roles:
         if r["posture"] == "isolated":
             out[wrapper_path(r)] = render_agent_wrapper(r, h).encode("utf-8")
         else:
             out[wrapper_path(r)] = render_skill_wrapper(r, h).encode("utf-8")
+            out[f"{skill_dir(r)}/role.md"] = r["spec_bytes"]
+            out[f"{skill_dir(r)}/RULES.md"] = rules_file
     return out
 
 
 def wrapper_globs(root: Path) -> list[str]:
     """Every wrapper path that exists on disk under root (to detect orphans)."""
     found = [str(p.relative_to(root)) for p in (root / ".claude" / "agents").glob("*.md")]
-    found += [str(p.relative_to(root)) for p in (root / ".claude" / "skills").glob("*/SKILL.md")]
+    found += [str(p.relative_to(root)) for p in (root / ".claude" / "skills").glob("*/*.md")]
     return sorted(found)
 
 

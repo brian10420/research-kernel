@@ -19,8 +19,11 @@ Then, in the project:
    items, deadlines or "none", guards). This is what every session reads first.
 2. Record the adoption as `DECISION_000` in the project's `DECISIONS.md`
    (proposer, date, decided_by: human, status: accepted).
-3. Point the roles at these files through the project's overlay (see the
-   "Project overlay slots" section at the end of each `core/roles/<role>.md`).
+3. Point the roles at these files through the project's overlay: copy
+   `templates/research-kernel.overlay.template.md` to
+   `.claude/research-kernel.overlay.md` in the project and fill the slots (each
+   `core/roles/<role>.md` ends with a "Project overlay slots" section listing
+   what it expects). Every skill wrapper injects that file when it loads.
 
 ## The files
 
