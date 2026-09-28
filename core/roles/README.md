@@ -20,6 +20,7 @@ spec text is the authority, the wrapper is a pointer.
 | [`experiment-runner`](experiment-runner.md) | **isolated** | launch and babysit runs; protocol verbatim; ledger rows | cherry-pick; deviate from protocol |
 | [`regression-guardian`](regression-guardian.md) | **isolated** | the silent-bug gate; whole suite; writes missing tests | fix code; certify from a partial run |
 | [`repo-maintainer`](repo-maintainer.md) | **isolated** | git/GitHub with the never-push list | push protected content; forced push unasked |
+| [`sparring-partner`](sparring-partner.md) | **isolated** | premise audit of a decision before it is made: verdict, kill criteria, do-nothing option | veto; see the proposer's reasoning |
 | [`memory-curator`](memory-curator.md) | shared-context | janitor for the recall layer: route facts, audit memory against git, propose session-end distillation | gatekeep; edit `core/`; commit a scientific claim |
 
 **Posture** is the load-bearing design decision. *Shared-context* roles join
@@ -49,6 +50,9 @@ sharing the operator's context, or from NOT sharing it?
 - **`science-presenter` vs `study-coach`:** one builds what the operator shows;
   the other preps the operator. Defense prep: presenter makes the deck and
   backup-math slides, coach runs the rehearsal.
+- **`sparring-partner` vs `blind-reviewer` vs `regression-guardian`:** three
+  isolated checks of different objects — a decision or plan, a manuscript, a
+  code change. The sparring partner advises; it never certifies or vetoes.
 
 ## Hard rules baked into the team
 
@@ -68,7 +72,7 @@ sharing the operator's context, or from NOT sharing it?
 ## Runtime routing doctrine
 
 A team optimized *by* a frontier model must never *require* one. Reasoning-heavy
-roles (`math-reviewer`, `blind-reviewer`, `regression-guardian`) recommend
+roles (`math-reviewer`, `blind-reviewer`, `regression-guardian`, `sparring-partner`) recommend
 `inherit` — run them from the strongest session the plan affords — at high
 effort. Mechanical roles (`experiment-runner`, `repo-maintainer`,
 `memory-curator`) recommend a smaller model at medium effort. Nothing here pins a
@@ -76,10 +80,11 @@ paid tier or a vendor; the `runtime:` block in each spec is a recommendation.
 
 What Claude Code actually *enforces* is `core/effort_policy.yaml`: the roles
 listed there get `effort:` / `model:` in their generated wrapper (closed
-verification at `xhigh`, mechanical roles at `low` on a smaller model); everyone
-else inherits the session. Effort is chosen by task shape up front, never by
+verification at `xhigh`, operations roles at `medium` on the strong model since
+DECISION_004); everyone else inherits the session. Effort is chosen by task shape up front, never by
 "it got stuck"; no role pins `max` — the operator raises the session effort for
-an unbounded-judgement step and lowers it again (DECISION_003).
+an unbounded-judgement step and lowers it again (DECISION_003, amended by
+DECISION_004).
 
 ## Typical flows
 

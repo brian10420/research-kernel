@@ -182,3 +182,108 @@ Public pushes still require the private leak-gate to print CLEAN.
 - Pin `max` on the reviewer roles — the closed-task curve saturates at `xhigh`;
   `max` is a session-level decision for long-horizon judgement steps only.
 
+
+---
+
+```yaml
+id: DECISION_004
+title: Amend DECISION_003's effort policy — operations roles on the strong model at medium; the guardian and the sparring partner at xhigh
+date: 2026-09-28
+proposer: fable          # ported from the source project's routing pass
+decided_by: human
+status: proposed
+evidence: [core/effort_policy.yaml, README.md]
+supersedes: ""           # amends point (3) of DECISION_003 only; points (1)–(2) stand
+superseded_by: ""
+```
+
+**Context.** DECISION_003 (3) pinned the two operations roles to a smaller model
+at `low` ("never needs frontier reasoning") and left `regression-guardian`
+unlisted. In the source project the operator reversed the first half on
+2026-09-28: operations errors are the expensive ones — a launch pattern that
+matches the wrong process, a protected path in a push — and they come from
+missed context, not from hard reasoning. The same pass pinned the guardian,
+because certify-or-reject is a closed, single-answer judgement of exactly the
+shape the policy already puts at `xhigh`. Separately, the documentation claim
+that "`model: inherit` does not inherit effort" was checked against the live
+Claude Code docs and is wrong: a wrapper without an `effort:` key inherits the
+session effort.
+
+**Decision (proposed).** `experiment-runner` and `repo-maintainer`: `model:
+opus`, `effort: medium`. `regression-guardian` and the new `sparring-partner`
+(DECISION_005): `effort: xhigh`, model inherited. The doctrine sentence becomes
+"closed verification at `xhigh`, operations at `medium` on the strong model,
+everything else inherits". The effort-inheritance sentence is corrected in
+`core/effort_policy.yaml` and `README.md`. The provider-neutral `runtime:`
+recommendations in the role specs are unchanged (a smaller model stays a valid
+recommendation for other runtimes; policy and recommendation may differ on
+purpose, DECISION_003).
+
+**Consequences.** Operations dispatches cost more tokens per call than under
+0.1.0. No role pins `max`; the operator-held session switch is unchanged. The
+team-map diagrams still show the 0.1.0 badges until they are redrawn.
+
+**Alternatives rejected.**
+- Keep `sonnet` @ `low` for operations — cheapest, but the costly failures of
+  those roles are context misses that a smaller model makes more often.
+- Pin `xhigh` on operations — the reasoning is shallow; `medium` suffices once
+  the model is strong.
+
+---
+
+```yaml
+id: DECISION_005
+title: Add sparring-partner — an isolated premise auditor for decisions, dispatched from a research-mentor gate
+date: 2026-09-28
+proposer: fable          # built and tested in the source project's optimization week
+decided_by: human
+status: proposed
+evidence: [core/roles/sparring-partner.md, core/roles/research-mentor.md, core/roles/README.md]
+supersedes: ""
+superseded_by: ""
+```
+
+**Context.** No role audited the premises of a *decision*. The blind reviewer
+judges manuscripts and the guardian judges code changes; proposals for new
+experiments or claim changes were discussed only in the shared-context mentor
+lane, where the auditor shares the proposer's assumptions. In the source
+project most recorded reversals were premise failures that could have been
+found in the files before any compute was spent.
+
+**Decision (proposed).** A thirteenth role, `sparring-partner` (isolated;
+Read / Grep / Glob / read-only shell / web). It receives the proposal as
+written plus its evidence paths — never the proposer's reasoning — and returns
+a verdict (`PROCEED` / `PROCEED-WITH-CHANGES` / `RETHINK`), a premise audit with
+file:line or command evidence, the strongest alternative including doing
+nothing, kill criteria with the cheapest disconfirming test, a regret list and
+what is solid. It follows a data-contact rule (it computes nothing a
+not-yet-contacted readout will report), a rebuttal scale with "one push, then
+retreat", and never vetoes. `research-mentor` gains a sparring gate (hard rule
+7): above the project's compute threshold, at the design phase of a large plan,
+and after a quick operator–mentor agreement on direction, it dispatches the
+role and opens its answer with the audit's verdict.
+
+**Evidence and its limits.** The source project ran a pre-declared RED/GREEN
+test (three planted-flaw scenarios, two sound controls, one pressure rebuttal;
+three repeats per cell). A fresh, equally isolated generic reviewer on the same
+model already caught every planted flaw, so the pre-declared "strictly better
+than the baseline" criterion was **not met** (a tie at the ceiling). What the
+role measurably added was the decision contract — an explicit verdict label,
+kill criteria and a do-nothing comparison in every output (the generic
+reviewer: none), and no veto headline for a cheap fix — and, after one
+refactor, the data-contact rule: both arms had computed a protected outcome in
+some reviews of an un-contacted pre-registration, and the refactored role did so
+in none of its re-runs. The mentor gate was tested separately: without the
+structural slot the mentor dispatched the audit but absorbed it (verdict shown
+in none of three answers); with it, the verdict opened three of three. Small n,
+one grader, same model family throughout.
+
+**Consequences.** One audit costs about as much as a plain isolated review
+(≈ +13 % in the source test). Claims about the role are limited to "adds the
+decision contract and the data-contact rule"; never "catches more flaws".
+
+**Alternatives rejected.**
+- A generic "review this" dispatch — same catch rate in the test, but no
+  verdict contract, and it broke the single-contact discipline.
+- A shared-context devil's advocate inside the mentor — shares the proposer's
+  assumptions, which is the failure this role exists to avoid.

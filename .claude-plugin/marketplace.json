@@ -10,7 +10,7 @@
       "name": "research-kernel",
       "source": "./",
       "description": "Twelve canonical research roles (8 in-session skills + 4 isolated subagents) with the canary handshake, project-state templates, and the effort policy. Install, then seed .claude/research-kernel.overlay.md in your project.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "MIT"
     }
   ]

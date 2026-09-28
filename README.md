@@ -16,7 +16,7 @@ reached through generated adapters.** MIT-licensed. Formerly
 /reload-plugins
 ```
 
-The twelve roles then appear namespaced as `/research-kernel:<role>` (skills)
+The thirteen roles then appear namespaced as `/research-kernel:<role>` (skills)
 and as dispatchable subagents. Add your project's facts in **one file the
 plugin never touches**:
 
@@ -69,12 +69,12 @@ legacy/                   the pre-migration Claude-specific originals (not loade
 
 ## The roles
 
-Twelve canonical roles in [`core/roles/`](core/roles/README.md): eight
+Thirteen canonical roles in [`core/roles/`](core/roles/README.md): eight
 *shared-context* roles that work inside your session (`math-reviewer`,
 `dl-engineer`, `research-mentor`, `results-analyst`, `paper-writer`,
-`study-coach`, `science-presenter`, `memory-curator`) and four *isolated* roles dispatched with a
+`study-coach`, `science-presenter`, `memory-curator`) and five *isolated* roles dispatched with a
 fresh context (`blind-reviewer`, `experiment-runner`, `regression-guardian`,
-`repo-maintainer`). Every spec has a purpose, an input contract, an output
+`repo-maintainer`, `sparring-partner`). Every spec has a purpose, an input contract, an output
 contract, hard rules (rule 0 is always the canary handshake), and a `runtime:`
 recommendation that never pins a vendor or a paid tier.
 
@@ -82,7 +82,9 @@ recommendation that never pins a vendor or a paid tier.
 
 The diagrams in [`assets/`](assets/) show the **Claude Code runtime view** of
 the same team: skills inside the session, subagents behind a context boundary,
-the guardian as the only gate.
+the guardian as the only gate. They are drawn for release 0.1.0 (twelve roles,
+0.1.0 effort badges); `sparring-partner` and the 0.2.0 badges (see "Effort
+policy" below) are not drawn yet.
 
 ![How the team works with you: eight skills share your session context; four subagents run isolated behind a context boundary; every role carries an effort badge set by its task shape](assets/team-map.svg)
 
@@ -178,13 +180,13 @@ git config core.hooksPath .githooks   # once per clone: pre-commit refuses stale
 
 `core/effort_policy.yaml` decides which wrappers carry an enforced `effort:` /
 `model:` (Claude Code honours these for skills and subagents; effort cannot be
-passed at dispatch time, and `model: inherit` does not inherit effort). The
-doctrine is *task shape decides, up front*:
+passed at dispatch time, and a role whose wrapper carries no `effort:` key
+inherits the session effort). The doctrine is *task shape decides, up front*:
 
 | task shape | setting | why |
 | --- | --- | --- |
-| closed, single-answer verification (`math-reviewer`, `blind-reviewer`) | `xhigh` | the curve saturates here; `max` buys about one point for ~40 % more tokens |
-| mechanical operations (`experiment-runner`, `repo-maintainer`) | smaller model, `low` | never needs frontier reasoning |
+| closed, single-answer verification (`math-reviewer`, `blind-reviewer`, `regression-guardian`, `sparring-partner`) | `xhigh` | the curve saturates here; `max` buys about one point for ~40 % more tokens |
+| operations (`experiment-runner`, `repo-maintainer`) | strong model (`opus`), `medium` | the reasoning is light, but an error (a wrong launch, a protected path pushed) is expensive — DECISION_004 |
 | everything else | inherits the session | authoring, analysis and dialogue happen at the operator's default |
 | long-horizon work with a signed plan | session default | verification comes from the plan, the pre-registration and the regression gate — not from effort |
 

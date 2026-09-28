@@ -38,6 +38,7 @@ Fill only the roles you use; delete the rest. Each role spec ends with a
 ### research-mentor
 - Locked story and claims that must not be re-inflated: <list>
 - Protocol of record: <evaluation protocol name + primary metric>
+- Sparring-gate compute threshold: <e.g. one accelerator-day>
 
 ### results-analyst
 - Committed analysis generators: <paths>; figures are regenerated, never hand-edited
@@ -74,6 +75,11 @@ Fill only the roles you use; delete the rest. Each role spec ends with a
 ### repo-maintainer (isolated)
 - Remote: `<owner>/<repo>`; **never-push list:** <paths that must never reach the remote>
 - Large-artifact / ignore rules: <summary>
+
+### sparring-partner (isolated — passed in the dispatch prompt)
+- Compute threshold that triggers a dispatch: <same as the mentor's>
+- Read-only safety line for shell calls: <e.g. how accelerators are hidden; forbidden commands>
+- Ledgers and state files whose prose counts as claims, not evidence: <paths>
 
 ## Effort protocol (session-level)
 

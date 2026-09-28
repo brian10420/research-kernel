@@ -2,6 +2,23 @@
 
 Versions follow `.claude-plugin/plugin.json`; bump both manifests together.
 
+## 0.2.0 — 2026-09-28
+
+- **New role `sparring-partner`** (isolated, 13th role; DECISION_005, proposed):
+  premise audit of a decision before it is made — verdict label, premise audit
+  with file:line evidence, strongest alternative including doing nothing, kill
+  criteria, regret list; data-contact rule; rebuttal scale with "one push, then
+  retreat"; never a veto. `research-mentor` hard rule 7 = the sparring gate (the
+  answer opens with the audit's verdict). Roster row and boundary added.
+- **Effort policy amended** (DECISION_004, proposed): `experiment-runner` and
+  `repo-maintainer` → `opus` @ `medium` (were `sonnet` @ `low`);
+  `regression-guardian` and `sparring-partner` → `xhigh`. The documented claim
+  that "`model: inherit` does not inherit effort" is corrected: a wrapper without
+  an `effort:` key inherits the session effort.
+- Adapters regenerated with `tools/sync.py`; `tools/check_drift.py` clean.
+- Known gap: `assets/team-map.svg` and `assets/team-flows.svg` still show the
+  0.1.0 team (twelve roles, 0.1.0 badges); the README says so.
+
 ## 0.1.0 — 2026-09-15
 
 First installable release (DECISION_003).

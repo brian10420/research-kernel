@@ -148,6 +148,7 @@ proposes `memory_forget`; nobody edits `core/` to match memory.
 | `research-mentor` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/research-mentor.md` | `.claude/skills/research-mentor/SKILL.md` |
 | `results-analyst` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/results-analyst.md` | `.claude/skills/results-analyst/SKILL.md` |
 | `science-presenter` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/science-presenter.md` | `.claude/skills/science-presenter/SKILL.md` |
+| `sparring-partner` | isolated | model `inherit (`inherit`)`, effort high | `core/roles/sparring-partner.md` | `.claude/agents/sparring-partner.md` |
 | `study-coach` | shared-context | model `inherit (`inherit`)`, effort session-default | `core/roles/study-coach.md` | `.claude/skills/study-coach/SKILL.md` |
 
 ## Claude Code mechanics

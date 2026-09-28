@@ -148,6 +148,7 @@ proposes `memory_forget`; nobody edits `core/` to match memory.
 | `research-mentor` | shared-context | model `inherit`, effort session-default | `core/roles/research-mentor.md` | `—` |
 | `results-analyst` | shared-context | model `inherit`, effort session-default | `core/roles/results-analyst.md` | `—` |
 | `science-presenter` | shared-context | model `inherit`, effort session-default | `core/roles/science-presenter.md` | `—` |
+| `sparring-partner` | isolated | model `inherit`, effort high | `core/roles/sparring-partner.md` | `—` |
 | `study-coach` | shared-context | model `inherit`, effort session-default | `core/roles/study-coach.md` | `—` |
 
 ## Loading a role (any agent runtime)

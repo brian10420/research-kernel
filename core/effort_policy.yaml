@@ -5,17 +5,21 @@
 # RECOMMENDATION. This file is the Claude Code ENFORCEMENT: for each role listed
 # here sync.py emits `effort:` (and, if given, `model:`) into the generated
 # wrapper's frontmatter, which Claude Code honours while that role is active
-# (skills, commands and subagents alike; effort cannot be passed at dispatch
-# time and `model: inherit` does not inherit effort).
+# (skills, commands and subagents alike). Effort cannot be passed at dispatch
+# time; a wrapper with no `effort:` key inherits the session effort.
 #
 # Roles NOT listed here inherit the session's effort — the default. Never list a
 # paid tier or a vendor model id; allowed `model:` values are inherit | sonnet |
 # opus | haiku, allowed `effort:` values are low | medium | high | xhigh | max.
 #
-# Doctrine (DECISION_003): effort is chosen by TASK SHAPE, up front.
-#   closed / single-answer work (a derivation check, a referee report)
+# Doctrine (DECISION_003, amended by DECISION_004): effort is chosen by TASK
+# SHAPE, up front.
+#   closed / single-answer work (a derivation check, a referee report, a
+#   certification, a premise audit)
 #       -> saturates at xhigh; max buys ~1 point for ~40 % more tokens.
-#   mechanical work (launch runs, git hygiene)  -> low on a smaller model.
+#   operations (launch runs, git hygiene) -> medium on the strong model: the
+#       reasoning is light, but a wrong launch or a pushed protected path is
+#       expensive (DECISION_004; was low on a smaller model under DECISION_003).
 #   long-horizon agentic work with a signed plan -> stays at the session default;
 #       the operator raises the SESSION effort (`/effort max`) for an
 #       unbounded-judgement step and lowers it again; roles never pin max.
@@ -28,11 +32,17 @@ math-reviewer:
 blind-reviewer:
   effort: xhigh
   rationale: one long single-shot judgement per draft — rare and decisive; xhigh is the ceiling of the closed-task curve
+regression-guardian:
+  effort: xhigh
+  rationale: certify-or-reject is a closed judgement; certification must not be cheaper than the change it certifies
+sparring-partner:
+  effort: xhigh
+  rationale: one closed premise audit per proposal; a missed false premise costs the whole experiment it licenses
 experiment-runner:
-  model: sonnet
-  effort: low
-  rationale: mechanical launch / poll / collect; never needs frontier reasoning
+  model: opus
+  effort: medium
+  rationale: launch / poll / collect is light reasoning, but a wrong launch wastes a campaign (DECISION_004)
 repo-maintainer:
-  model: sonnet
-  effort: low
-  rationale: mechanical git hygiene; the never-push list is a checklist, not a reasoning task
+  model: opus
+  effort: medium
+  rationale: the never-push list is a checklist, but one pushed protected path is irreversible (DECISION_004)
