@@ -190,8 +190,8 @@ id: DECISION_004
 title: Amend DECISION_003's effort policy — operations roles on the strong model at medium; the guardian and the sparring partner at xhigh
 date: 2026-09-28
 proposer: fable          # ported from the source project's routing pass
-decided_by: human
-status: proposed
+decided_by: human        # accepted by the human operator 2026-09-30
+status: accepted
 evidence: [core/effort_policy.yaml, README.md]
 supersedes: ""           # amends point (3) of DECISION_003 only; points (1)–(2) stand
 superseded_by: ""
@@ -236,8 +236,8 @@ id: DECISION_005
 title: Add sparring-partner — an isolated premise auditor for decisions, dispatched from a research-mentor gate
 date: 2026-09-28
 proposer: fable          # built and tested in the source project's optimization week
-decided_by: human
-status: proposed
+decided_by: human        # accepted by the human operator 2026-09-30
+status: accepted
 evidence: [core/roles/sparring-partner.md, core/roles/research-mentor.md, core/roles/README.md]
 supersedes: ""
 superseded_by: ""
