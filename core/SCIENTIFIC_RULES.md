@@ -2,7 +2,7 @@
 schema: research-os/scientific-rules/v1
 status: canonical
 owner: human (repository owner)
-last_changed: 2026-09-04
+last_changed: 2026-10-12
 change_policy: >
   Any change to this file requires a DECISIONS.md entry (status: accepted,
   decided_by: human). RULES_HASH — the first 12 hex characters of
@@ -192,3 +192,24 @@ proposes `memory_forget`; nobody edits `core/` to match memory.
 - **No paid-tier pins.** Role specs recommend a runtime posture (`inherit` for
   reasoning-heavy roles, a smaller model for mechanical roles); they never require
   a specific vendor or a paid tier.
+
+## 9. Operator-facing documents — draw before you narrate
+
+<!-- adapter:include -->
+- A document the human operator must read, judge or sign leads with figures
+  wherever its content is a flow, a comparison of arms, a decision rule, a noise
+  or power statement, or a schedule; prose carries only what cannot be drawn.
+- Long normative text (pins, gate definitions, file plans, amendments) is folded
+  by default, never deleted: the signable text stays whole and governs.
+- A figure accompanies its derivation or rule; it never replaces it.
+- Every label, number, threshold, inequality direction and status on a figure
+  traces to a source line and is listed as a claim; nothing the source does not
+  state appears on it.
+- A fresh-context checker that authored none of them verifies the figures and any
+  re-typeset gloss for added claims and dropped conditions; the author applies
+  its text verbatim. A re-typeset math gloss on a signable document also gets a
+  math-review equivalence check.
+- The failure this rule prevents: a document added to the operator's reading
+  surface as hundreds of lines of prose with no figure, because the drawing rule
+  lived only in a build directory and a plan file.
+<!-- /adapter:include -->

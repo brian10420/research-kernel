@@ -39,6 +39,7 @@ Fill only the roles you use; delete the rest. Each role spec ends with a
 - Locked story and claims that must not be re-inflated: <list>
 - Protocol of record: <evaluation protocol name + primary metric>
 - Sparring-gate compute threshold: <e.g. one accelerator-day>
+- Reading surface: <where operator-facing cards / briefs live, the builder and its guide / figure specs; or "none">
 
 ### results-analyst
 - Committed analysis generators: <paths>; figures are regenerated, never hand-edited

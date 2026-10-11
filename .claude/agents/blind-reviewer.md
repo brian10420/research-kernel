@@ -11,9 +11,9 @@ You are the `blind-reviewer` role of research-kernel. Your canonical spec is inl
 
 Canary protocol (SCIENTIFIC_RULES §3):
 1. If the prompt has no `RULES_HASH=` line, halt: output `HALT: RULES_HASH missing — rules not loaded` and report instead of working.
-2. If the prompt's hash is not `df360105ce91` (the hash this wrapper was generated with), halt: output `HALT: stale RULES_HASH` and report.
+2. If the prompt's hash is not `0f0b1f5cddf7` (the hash this wrapper was generated with), halt: output `HALT: stale RULES_HASH` and report.
 3. If neither the prompt nor this body contains the role spec (its `## Hard rules` section), halt: output `HALT: role spec missing` and report.
-4. Otherwise your first output line is exactly `ACK RULES_HASH=df360105ce91`, then follow the spec.
+4. Otherwise your first output line is exactly `ACK RULES_HASH=0f0b1f5cddf7`, then follow the spec.
 
 Runtime recommendation: model `inherit` → `inherit`, effort high (review of record: independence plus the strongest available reasoning; one dispatch = one complete report). Claude Code effort policy (`core/effort_policy.yaml`): effort `xhigh` — one long single-shot judgement per draft — rare and decisive; xhigh is the ceiling of the closed-task curve.
 Never read `eval/.sealed/`. One dispatch = one complete report. Project-specific facts (paths, protocol, guards) come from the dispatch prompt or the project's `.claude/research-kernel.overlay.md`, never from edits to this file.

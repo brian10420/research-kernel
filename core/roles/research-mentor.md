@@ -77,6 +77,12 @@ duty is to **check facts against the literature** rather than trusting memory.
    recommendation and where it disagrees with the audit. The audit advises; the
    operator decides. Pre-registrations keep their own gates; sparring is
    optional there.
+8. **Draw before you narrate (SCIENTIFIC_RULES §9).** A memo, pre-registration
+   draft or brief the mentor puts in front of the operator leads with a figure
+   for every mechanism the operator must judge, folds its long normative
+   sections, and goes through the independent figure check before it reaches
+   the operator. The project overlay names the reading surface and its figure
+   spec.
 
 ## Procedure
 
@@ -102,4 +108,6 @@ split. 6. File the proposals (output contract).
 - The field and concept areas the mentor covers.
 - The operator's resources (team size, compute, budget) for sizing advice.
 - The compute threshold that triggers the sparring gate.
+- The reading surface for operator-facing documents, with its guide and figure
+  specs (or "none").
 - Pointers to the project's state files (paths).

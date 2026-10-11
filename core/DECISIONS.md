@@ -287,3 +287,50 @@ decision contract and the data-contact rule"; never "catches more flaws".
   verdict contract, and it broke the single-contact discipline.
 - A shared-context devil's advocate inside the mentor — shares the proposer's
   assumptions, which is the failure this role exists to avoid.
+
+```yaml
+id: DECISION_006
+title: Operator-facing documents lead with figures — SCIENTIFIC_RULES §9 (draw before you narrate) and research-mentor hard rule 8
+date: 2026-10-12
+proposer: joint:[fable-5.1, opus-5.5]   # planned by Fable 5.1, written by Opus 5.5 in the source project, 2026-10-11/12
+decided_by: human        # the operator chose "project skill + kernel rule" on 2026-10-11; the text awaits acceptance
+status: proposed
+evidence: [core/SCIENTIFIC_RULES.md, core/roles/research-mentor.md, templates/research-kernel.overlay.template.md]
+supersedes: ""
+superseded_by: ""
+```
+
+**Context.** The operator reads, judges and signs the project's documents on a
+reading surface (a page of cards). A week after asking for figures wherever
+possible (「能畫圖就畫圖」), the operator found a new pre-registration card added
+as several hundred lines of prose with no figure and no guide, and asked again
+(「把他能用畫的就不要塞大量文字」). The cause: the drawing rule lived only in
+two spec files inside a build directory and in a plan file; no role, memory or
+check carried it, so the session that added the card never saw it. The operator
+chose to make the rule durable in two places: a project skill that maintains the
+reading surface, and one generic rule here.
+
+**Decision (proposed).** SCIENTIFIC_RULES gains §9: an operator-facing document
+leads with figures for flows, arm comparisons, decision rules, noise or power
+statements and schedules; long normative text is folded, never deleted; a figure
+accompanies its derivation and never replaces it; every label on a figure traces
+to a source line; a fresh-context checker that authored none of it verifies
+figures and glosses, and the author applies its text verbatim (a re-typeset math
+gloss on a signable document also gets a math-review equivalence check).
+`research-mentor` gains hard rule 8, which applies §9 to everything the mentor
+puts in front of the operator. The overlay template gains a "Reading surface"
+slot under research-mentor. Enforcement lives in each project (in the source
+project, its page builder's check fails a card the operator must read or sign
+that has no figure).
+
+**Consequences.** RULES_HASH changes and every adapter is regenerated. A project
+without a reading surface writes "none" in the slot; §9 then binds only the
+documents handed to the operator. SCIENTIFIC_RULES' change policy asks for an
+accepted entry: the operator accepts or rejects this one before the commit is
+pushed.
+
+**Alternatives rejected.**
+- A new generic curator role for the reading surface — a many-file process for
+  something project-specific by nature (each project's surface and builder
+  differ).
+- A project-only rule — it would not reach the other projects that use the kernel.

@@ -4,10 +4,10 @@
 
 # CLAUDE.md — Claude Code adapter for research-os
 
-RULES_HASH = df360105ce91
+RULES_HASH = 0f0b1f5cddf7
 
-Canary line to embed verbatim in every agent prompt: `RULES_HASH=df360105ce91`
-Expected first output line of every role: `ACK RULES_HASH=df360105ce91`
+Canary line to embed verbatim in every agent prompt: `RULES_HASH=0f0b1f5cddf7`
+Expected first output line of every role: `ACK RULES_HASH=0f0b1f5cddf7`
 
 ## Where truth lives (pointer map)
 
@@ -133,6 +133,25 @@ proposer, anything a paper could cite, personal data beyond what a command
 needs, secrets. When memory contradicts git, memory loses: the memory-curator
 proposes `memory_forget`; nobody edits `core/` to match memory.
 
+### 9. Operator-facing documents — draw before you narrate
+
+- A document the human operator must read, judge or sign leads with figures
+  wherever its content is a flow, a comparison of arms, a decision rule, a noise
+  or power statement, or a schedule; prose carries only what cannot be drawn.
+- Long normative text (pins, gate definitions, file plans, amendments) is folded
+  by default, never deleted: the signable text stays whole and governs.
+- A figure accompanies its derivation or rule; it never replaces it.
+- Every label, number, threshold, inequality direction and status on a figure
+  traces to a source line and is listed as a claim; nothing the source does not
+  state appears on it.
+- A fresh-context checker that authored none of them verifies the figures and any
+  re-typeset gloss for added claims and dropped conditions; the author applies
+  its text verbatim. A re-typeset math gloss on a signable document also gets a
+  math-review equivalence check.
+- The failure this rule prevents: a document added to the operator's reading
+  surface as hundreds of lines of prose with no figure, because the drawing rule
+  lived only in a build directory and a plan file.
+
 ## Roles (canonical specs in `core/roles/`)
 
 | role | posture | runtime (recommendation) | spec | wrapper |
@@ -158,7 +177,7 @@ proposes `memory_forget`; nobody edits `core/` to match memory.
 - **Project overlay.** Project-specific facts live in the consuming project's `.claude/research-kernel.overlay.md` (template: `templates/research-kernel.overlay.template.md`); every skill wrapper injects it when present. That file, plus the project-state files, is the only place a project's facts belong.
 - **Effort policy.** `core/effort_policy.yaml` decides which wrappers carry `effort:` / `model:` frontmatter (honoured by Claude Code for skills and subagents; not passable at dispatch time). Effort is chosen by task shape up front — closed verification saturates at xhigh, mechanical roles run low on a smaller model, long-horizon work stays at the session default and the operator raises the SESSION effort for an unbounded-judgement step; no role pins max, and "stuck" is a reason to change method, not effort.
 - **Custom subagents do load the CLAUDE.md hierarchy** (built-in Explore/Plan agents skip it) but never the session's auto-memory, and their own body is not guaranteed to reach them on every harness — so the spec and hash are embedded in the prompt regardless.
-- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper whose body only states that the full spec and RULES_HASH must arrive in the task prompt. When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line `RULES_HASH=df360105ce91` into the prompt yourself — subagents may not inherit this file or their agent body.
+- **Isolated roles** are dispatched as subagents: `.claude/agents/<role>.md` is a thin wrapper whose body only states that the full spec and RULES_HASH must arrive in the task prompt. When you spawn one with the Agent tool, paste the ENTIRE `core/roles/<role>.md` text and the line `RULES_HASH=0f0b1f5cddf7` into the prompt yourself — subagents may not inherit this file or their agent body.
 - **Missing ACK is a loud failure.** A role whose first line is not `ACK RULES_HASH=…` did not load the rules; stop and re-dispatch. `regression-guardian` rejects run logs without it.
 - **Blind review:** never hand `blind-reviewer` anything but the bundle produced by `tools/anonymize.py`; `eval/.sealed/` is off-limits to reviewers.
 - **Model routing:** `inherit` for reasoning-heavy roles, a smaller model for mechanical roles; no role pins a paid tier or a vendor model id. Concrete tool and plugin names (artifact publishing, design canvas, web search, research-report pipelines) are project-overlay matters, not part of the canonical specs.

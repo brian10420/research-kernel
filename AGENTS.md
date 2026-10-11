@@ -4,10 +4,10 @@
 
 # AGENTS.md — harness-neutral adapter for research-os
 
-RULES_HASH = df360105ce91
+RULES_HASH = 0f0b1f5cddf7
 
-Canary line to embed verbatim in every agent prompt: `RULES_HASH=df360105ce91`
-Expected first output line of every role: `ACK RULES_HASH=df360105ce91`
+Canary line to embed verbatim in every agent prompt: `RULES_HASH=0f0b1f5cddf7`
+Expected first output line of every role: `ACK RULES_HASH=0f0b1f5cddf7`
 
 ## Where truth lives (pointer map)
 
@@ -133,6 +133,25 @@ proposer, anything a paper could cite, personal data beyond what a command
 needs, secrets. When memory contradicts git, memory loses: the memory-curator
 proposes `memory_forget`; nobody edits `core/` to match memory.
 
+### 9. Operator-facing documents — draw before you narrate
+
+- A document the human operator must read, judge or sign leads with figures
+  wherever its content is a flow, a comparison of arms, a decision rule, a noise
+  or power statement, or a schedule; prose carries only what cannot be drawn.
+- Long normative text (pins, gate definitions, file plans, amendments) is folded
+  by default, never deleted: the signable text stays whole and governs.
+- A figure accompanies its derivation or rule; it never replaces it.
+- Every label, number, threshold, inequality direction and status on a figure
+  traces to a source line and is listed as a claim; nothing the source does not
+  state appears on it.
+- A fresh-context checker that authored none of them verifies the figures and any
+  re-typeset gloss for added claims and dropped conditions; the author applies
+  its text verbatim. A re-typeset math gloss on a signable document also gets a
+  math-review equivalence check.
+- The failure this rule prevents: a document added to the operator's reading
+  surface as hundreds of lines of prose with no figure, because the drawing rule
+  lived only in a build directory and a plan file.
+
 ## Roles (canonical specs in `core/roles/`)
 
 | role | posture | runtime (recommendation) | spec | wrapper |
@@ -154,8 +173,8 @@ proposes `memory_forget`; nobody edits `core/` to match memory.
 ## Loading a role (any agent runtime)
 
 1. Read `core/roles/<role>.md` in full.
-2. Put its entire text plus the line `RULES_HASH=df360105ce91` into the agent's instructions or task prompt. Do not rely on the runtime inheriting this file.
-3. Expect `ACK RULES_HASH=df360105ce91` as the agent's first output line; anything else means the rules were not loaded — stop and re-dispatch.
+2. Put its entire text plus the line `RULES_HASH=0f0b1f5cddf7` into the agent's instructions or task prompt. Do not rely on the runtime inheriting this file.
+3. Expect `ACK RULES_HASH=0f0b1f5cddf7` as the agent's first output line; anything else means the rules were not loaded — stop and re-dispatch.
 4. Isolated roles (`blind-reviewer`, `experiment-runner`, `regression-guardian`, `repo-maintainer`) run in a fresh context with only their inputs; shared-context roles run inside the operator's session.
 5. `blind-reviewer` receives only the output of `tools/anonymize.py`; no runtime may read `eval/.sealed/` on a reviewer's behalf.
 6. Model choice is a recommendation (`inherit` for reasoning-heavy roles, a smaller model for mechanical roles); never a vendor or paid-tier requirement.
