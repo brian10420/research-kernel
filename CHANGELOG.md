@@ -5,7 +5,7 @@ Versions follow `.claude-plugin/plugin.json`; bump both manifests together.
 ## 0.2.1 — 2026-10-12
 
 - **SCIENTIFIC_RULES §9 "Operator-facing documents — draw before you narrate"**
-  (DECISION_006, proposed): figures lead wherever the content is a flow, an arm
+  (DECISION_006, accepted): figures lead wherever the content is a flow, an arm
   comparison, a decision rule, a noise or power statement or a schedule; long
   normative text folded, never deleted; a figure never replaces its derivation;
   every figure label traced to a source line; an independent fresh-context check
@@ -16,6 +16,8 @@ Versions follow `.claude-plugin/plugin.json`; bump both manifests together.
   + 5 isolated subagents) since 0.2.0; it still said twelve.
 - Adapters regenerated with `tools/sync.py` (RULES_HASH changes);
   `tools/check_drift.py` clean.
+- Decisions accepted by the human operator: DECISION_004 and DECISION_005
+  (filed with 0.2.0) on 2026-09-30, DECISION_006 on 2026-10-12.
 
 ## 0.2.0 — 2026-09-28
 

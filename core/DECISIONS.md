@@ -293,8 +293,8 @@ id: DECISION_006
 title: Operator-facing documents lead with figures — SCIENTIFIC_RULES §9 (draw before you narrate) and research-mentor hard rule 8
 date: 2026-10-12
 proposer: joint:[fable-5.1, opus-5.5]   # planned by Fable 5.1, written by Opus 5.5 in the source project, 2026-10-11/12
-decided_by: human        # the operator chose "project skill + kernel rule" on 2026-10-11; the text awaits acceptance
-status: proposed
+decided_by: human        # accepted by the human operator 2026-10-12 (the operator chose "project skill + kernel rule" on 2026-10-11)
+status: accepted
 evidence: [core/SCIENTIFIC_RULES.md, core/roles/research-mentor.md, templates/research-kernel.overlay.template.md]
 supersedes: ""
 superseded_by: ""
