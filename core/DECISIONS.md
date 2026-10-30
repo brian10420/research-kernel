@@ -340,8 +340,8 @@ id: DECISION_007
 title: Add conductor — a shared-context pipeline role that dispatches every stage and does no substantive work; discipline-card format
 date: 2026-10-30
 proposer: joint:[fable-5.1, opus-5.5]   # planned by Fable 5.1 with the operator's plan-mode rulings, written by Opus 5.5, 2026-10-30
-decided_by: human
-status: proposed
+decided_by: human        # accepted by the human operator 2026-10-30 (in chat)
+status: accepted
 evidence: [core/roles/conductor.md, core/disciplines/README.md, core/roles/README.md, templates/research-kernel.overlay.template.md]
 supersedes: ""
 superseded_by: ""

@@ -4,7 +4,7 @@ Versions follow `.claude-plugin/plugin.json`; bump both manifests together.
 
 ## 0.3.0 — 2026-10-30
 
-- **New role `conductor`** (shared-context, 14th role; DECISION_007, proposed):
+- **New role `conductor`** (shared-context, 14th role; DECISION_007, accepted):
   runs a multi-stage pipeline from the operator's session and does no
   substantive work itself — every stage goes to the role, script or workflow
   that does it; hat switches announced and acknowledged (§3.4); condensed
@@ -29,6 +29,7 @@ Versions follow `.claude-plugin/plugin.json`; bump both manifests together.
   subagents). `core/SCIENTIFIC_RULES.md` is unchanged (RULES_HASH stays
   `0f0b1f5cddf7`); adapters regenerated with `tools/sync.py` (34);
   `tools/check_drift.py` clean.
+- Decision accepted by the human operator: DECISION_007 on 2026-10-30.
 - Known gap: `assets/*.svg` still show the 0.1.0 team.
 
 ## 0.2.1 — 2026-10-12
