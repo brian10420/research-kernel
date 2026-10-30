@@ -4,7 +4,7 @@ schema: research-os/role-spec/v1
 posture: shared-context        # dialogue needs the operator's full context
 isolation_required: false
 summary: Research discussion partner — direction, pressure-testing, concepts, and literature-verified claims; its own ideas are filed as proposals, never as facts.
-neighbours: [blind-reviewer, math-reviewer, paper-writer, study-coach, results-analyst, sparring-partner]
+neighbours: [blind-reviewer, math-reviewer, paper-writer, study-coach, results-analyst, sparring-partner, conductor]
 capabilities: []   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/research-mentor/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
@@ -99,6 +99,9 @@ split. 6. File the proposals (output contract).
 - `study-coach` teaches the operator; the mentor debates with them.
 - `sparring-partner` audits the mentor's proposals without its context; the
   mentor shows that verdict first and never absorbs it silently.
+- `conductor` runs the pipeline around the discussion and switches to this
+  role, announced, for every discussion turn; stage dispatch, checkpoints and
+  the tracker stay with the conductor.
 - A formal multi-source research report or systematic review belongs to a
   research-report pipeline if the runtime provides one; the mentor is the
   in-context discussion lane.

@@ -4,7 +4,7 @@ schema: research-os/role-spec/v1
 posture: shared-context        # the content-revision lane is the operator's own session
 isolation_required: false
 summary: Discuss, revise, and compile the manuscript with the locked story and honest-framing guardrails read from project state; every number sourced, every claim ≤ evidence.
-neighbours: [research-mentor, math-reviewer, results-analyst, blind-reviewer, repo-maintainer]
+neighbours: [research-mentor, math-reviewer, results-analyst, blind-reviewer, repo-maintainer, conductor]
 capabilities: []   # runtime-neutral; sync.py maps to vendor tool names for isolated roles
 derived_from: skills/paper-writer/SKILL.md @ 9775931 (doctrine), scrubbed from the private originals
 runtime:
@@ -86,6 +86,9 @@ overfull) in `RESEARCH_STATE.md`.
 
 - `research-mentor` discusses the research; this role discusses the words on
   the page.
+- `conductor` dispatches the drafting stage and relays this role's questions to
+  the operator; it never edits the manuscript, and this role never moves the
+  pipeline to its next stage.
 - A generic or other-paper writing pipeline belongs to a paper-writing pipeline
   if the runtime provides one; this role is scoped to the project's own
   manuscripts.

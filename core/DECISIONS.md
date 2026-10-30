@@ -334,3 +334,79 @@ pushed.
   something project-specific by nature (each project's surface and builder
   differ).
 - A project-only rule — it would not reach the other projects that use the kernel.
+
+```yaml
+id: DECISION_007
+title: Add conductor — a shared-context pipeline role that dispatches every stage and does no substantive work; discipline-card format
+date: 2026-10-30
+proposer: joint:[fable-5.1, opus-5.5]   # planned by Fable 5.1 with the operator's plan-mode rulings, written by Opus 5.5, 2026-10-30
+decided_by: human
+status: proposed
+evidence: [core/roles/conductor.md, core/disciplines/README.md, core/roles/README.md, templates/research-kernel.overlay.template.md]
+supersedes: ""
+superseded_by: ""
+```
+
+**Context.** In the source project a manuscript pipeline runs about a dozen
+stages per chapter (brief, draft, mechanical checks, math review, gate review,
+fixes, operator sign-off, translation, publication), with the main session
+re-typing the same check sequences at every stage and re-reading long agent
+reports; the operator measured most of the session's spend as context re-read
+and asked for review-quality material before any discussion, key points first.
+`SCIENTIFIC_RULES` names "the orchestrator" in §1 and §3 without a role that
+holds that duty. Surveyed projects (the academic-research-skills plugin's
+pipeline orchestrator; research-superpowers; a public Claude Code research
+workflow) separate orchestration from content and stop the operator only at
+named checkpoints. The operator ruled (2026-10-30, plan mode): the role is
+kernel-generic; the only mandatory stop in the source project is set in its
+overlay; field packs get a format and an overlay slot only.
+
+**Decision (proposed).** A fourteenth role, `conductor` (shared-context, model
+`inherit`, effort session-default, no effort-policy entry). It does no
+substantive work: each stage goes to the role, workflow or script that does it,
+and a judgement turn in the session is an announced hat switch to that role,
+which echoes its own ACK line (§3.4). It
+asks for condensed returns, gives each agent one deliverable, moves recurring
+mechanical work into scripts, hooks or workflow steps, and keeps the main
+session the only committer, publisher and dispatcher. Checkpoints are MANDATORY
+(overlay-named, never skipped or answered for the operator), FULL (after four
+consecutive SLIM continues, a failed gate, an override, or before a deviation
+from the pipeline of record) or SLIM (one line, default runs); FULL and
+MANDATORY stops show a decision dashboard, wait for the operator's reply, and
+carry a five-item self-check line (numbers, concession, trajectory, scope,
+completeness). A SOFT-GATE may be overridden only on the operator's explicit
+choice, recorded with its reason in the tracker; a HARD-STOP — including
+anything `SCIENTIFIC_RULES` requires — is never overridden, only fixed and
+re-run, or the gate changed by the route its layer allows (an accepted
+`DECISIONS.md` entry for an overlay gate; the rules file's change policy for a
+`SCIENTIFIC_RULES` gate). Dispatches carry only the inputs the dispatched role's
+input contract allows (the anonymized bundle for `blind-reviewer`; the proposal
+as written for `sparring-partner`). Verdicts pass through verbatim. Pipeline state lives in the project's
+tracker file, never in memory. In a session wearing the role, the conductor is
+the orchestrator of `SCIENTIFIC_RULES` §1 and §3. `core/disciplines/README.md`
+fixes the format of discipline cards (evidence conventions, terminology,
+reviewer questions, ethics and consent, the quantitative / qualitative / mixed
+switch; every item sourced; model-written cards enter as proposed); no cards
+are written yet.
+
+**§9 reading.** The role treats a SLIM line or a chat dashboard as a digest that
+points to documents, not as a §9 document the operator signs; anything published
+to the reading surface or handed over as a file gets §9 in full. This entry
+records that reading so it does not live only in a role spec; if the operator
+reads §9 otherwise, §9 wins and the role's rule 12 is amended.
+
+**Consequences.** `SCIENTIFIC_RULES.md` is unchanged (RULES_HASH stays
+`0f0b1f5cddf7`); 34 adapters instead of 31. Each consuming project fills the
+`### conductor` overlay slot (pipeline of record, MANDATORY checkpoints,
+tracker, checks and SOFT gates, brief sources, discipline cards) before a
+session wears the role. Unmeasured: the role has not yet run a full pipeline;
+the source project pilots it on one chapter before any claim about savings.
+
+**Alternatives rejected.**
+- Keep orchestration inside `research-mentor` — the mentor is a discussion
+  role; mixing dispatch, checkpoints and tracking into it is the drift the
+  operator reported.
+- An isolated orchestrator agent — it could not hold the operator's session or
+  wait at the operator's checkpoints.
+- A project-only orchestrator — the duty is named generically in
+  `SCIENTIFIC_RULES` and recurs in every project with a multi-stage pipeline.

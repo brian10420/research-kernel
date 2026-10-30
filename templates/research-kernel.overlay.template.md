@@ -41,6 +41,15 @@ Fill only the roles you use; delete the rest. Each role spec ends with a
 - Sparring-gate compute threshold: <e.g. one accelerator-day>
 - Reading surface: <where operator-facing cards / briefs live, the builder and its guide / figure specs; or "none">
 
+### conductor
+- Pipeline of record: <stages in order; per stage the role, workflow or script that does it>
+- MANDATORY checkpoints: <name — position in the pipeline — any audit attached (e.g. a sparring-partner dispatch)>
+- Tracker: `<path>` (one row per stage transition, with override reasons)
+- Per-stage mechanical checks: `<script paths>`; SOFT gates: <gates that may be overridden with a logged reason, or "none — every gate is a HARD-STOP">
+- Per-stage brief sources: <paths>
+- Idle limit for dispatched agents: <the runtime's context-cache lifetime, or a stricter project rule>
+- Discipline cards passed into briefs: <see "Disciplines" below, or "none">
+
 ### results-analyst
 - Committed analysis generators: <paths>; figures are regenerated, never hand-edited
 - Where numbers of record are collected from: <log line / file>
@@ -81,6 +90,11 @@ Fill only the roles you use; delete the rest. Each role spec ends with a
 - Compute threshold that triggers a dispatch: <same as the mentor's>
 - Read-only safety line for shell calls: <e.g. how accelerators are hidden; forbidden commands>
 - Ledgers and state files whose prose counts as claims, not evidence: <paths>
+
+## Disciplines
+
+- Discipline cards in use (format: `core/disciplines/README.md`): <card names, or "none">
+- Fields the project crosses into without a card yet: <list, or "none">
 
 ## Effort protocol (session-level)
 

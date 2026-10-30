@@ -157,6 +157,7 @@ proposes `memory_forget`; nobody edits `core/` to match memory.
 | role | posture | runtime (recommendation) | spec | wrapper |
 | --- | --- | --- | --- | --- |
 | `blind-reviewer` | isolated | model `inherit`, effort high | `core/roles/blind-reviewer.md` | `—` |
+| `conductor` | shared-context | model `inherit`, effort session-default | `core/roles/conductor.md` | `—` |
 | `dl-engineer` | shared-context | model `inherit`, effort session-default | `core/roles/dl-engineer.md` | `—` |
 | `experiment-runner` | isolated | model `smaller-tier`, effort medium | `core/roles/experiment-runner.md` | `—` |
 | `math-reviewer` | shared-context | model `inherit`, effort high | `core/roles/math-reviewer.md` | `—` |

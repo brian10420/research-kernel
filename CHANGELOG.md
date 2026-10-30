@@ -2,6 +2,35 @@
 
 Versions follow `.claude-plugin/plugin.json`; bump both manifests together.
 
+## 0.3.0 — 2026-10-30
+
+- **New role `conductor`** (shared-context, 14th role; DECISION_007, proposed):
+  runs a multi-stage pipeline from the operator's session and does no
+  substantive work itself — every stage goes to the role, script or workflow
+  that does it; hat switches announced and acknowledged (§3.4); condensed
+  returns; dispatch inputs limited to each role's input contract; one
+  deliverable per agent; mechanical work as scripts, hooks or workflow steps;
+  the main session is the only committer, publisher and dispatcher. Checkpoint
+  classes MANDATORY (overlay-named, never skipped) / FULL (after 4 SLIM
+  continues, a failed gate, an override, or before a deviation from the
+  pipeline) / SLIM (one line, default runs); a decision dashboard (key points →
+  ≤ 3-line summary → numbered options with a default) with a five-item
+  self-check line; SOFT-GATE overrides only on the operator's choice with a
+  logged reason, HARD-STOP never; verdicts verbatim; pipeline state in the
+  project's tracker file. Model `inherit`, effort session-default; no effort-policy entry.
+- **`core/disciplines/README.md`**: the discipline-card format (evidence
+  conventions, terminology, what reviewers in the field ask, ethics and consent
+  norms, the quantitative / qualitative / mixed switch); no cards yet.
+- `research-mentor` and `paper-writer` gain `conductor` as a neighbour and one
+  Boundaries line each; the roster gains the row, a boundary bullet and a
+  **Pipeline** flow; the overlay template gains a `### conductor` slot and a
+  `## Disciplines` section.
+- Manifests 0.3.0: fourteen roles (9 in-session skills + 5 isolated
+  subagents). `core/SCIENTIFIC_RULES.md` is unchanged (RULES_HASH stays
+  `0f0b1f5cddf7`); adapters regenerated with `tools/sync.py` (34);
+  `tools/check_drift.py` clean.
+- Known gap: `assets/*.svg` still show the 0.1.0 team.
+
 ## 0.2.1 — 2026-10-12
 
 - **SCIENTIFIC_RULES §9 "Operator-facing documents — draw before you narrate"**

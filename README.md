@@ -16,7 +16,7 @@ reached through generated adapters.** MIT-licensed. Formerly
 /reload-plugins
 ```
 
-The thirteen roles then appear namespaced as `/research-kernel:<role>` (skills)
+The fourteen roles then appear namespaced as `/research-kernel:<role>` (skills)
 and as dispatchable subagents. Add your project's facts in **one file the
 plugin never touches**:
 
@@ -52,6 +52,7 @@ core/                     canonical, provider-neutral — edit HERE
   RESEARCH_STATE.md  EXPERIMENT_LEDGER.md  HYPOTHESES.md  FAILED_IDEAS.md
   LITERATURE_MAP.md  OPEN_QUESTIONS.md  STUDY_LOG.md      (schemas + one worked example each)
   roles/                  one spec per role + README roster
+  disciplines/            field-card format for cross-field research (no cards yet)
   effort_policy.yaml      which roles carry an enforced Claude Code effort/model (task-shape doctrine)
 CLAUDE.md  AGENTS.md      GENERATED adapters (tools/sync.py) — never hand-edit
 .claude/agents/ .claude/skills/   GENERATED self-contained wrappers for Claude Code (spec + rules next to each SKILL.md)
@@ -69,10 +70,10 @@ legacy/                   the pre-migration Claude-specific originals (not loade
 
 ## The roles
 
-Thirteen canonical roles in [`core/roles/`](core/roles/README.md): eight
+Fourteen canonical roles in [`core/roles/`](core/roles/README.md): nine
 *shared-context* roles that work inside your session (`math-reviewer`,
 `dl-engineer`, `research-mentor`, `results-analyst`, `paper-writer`,
-`study-coach`, `science-presenter`, `memory-curator`) and five *isolated* roles dispatched with a
+`study-coach`, `science-presenter`, `memory-curator`, `conductor`) and five *isolated* roles dispatched with a
 fresh context (`blind-reviewer`, `experiment-runner`, `regression-guardian`,
 `repo-maintainer`, `sparring-partner`). Every spec has a purpose, an input contract, an output
 contract, hard rules (rule 0 is always the canary handshake), and a `runtime:`
@@ -83,8 +84,8 @@ recommendation that never pins a vendor or a paid tier.
 The diagrams in [`assets/`](assets/) show the **Claude Code runtime view** of
 the same team: skills inside the session, subagents behind a context boundary,
 the guardian as the only gate. They are drawn for release 0.1.0 (twelve roles,
-0.1.0 effort badges); `sparring-partner` and the 0.2.0 badges (see "Effort
-policy" below) are not drawn yet.
+0.1.0 effort badges); `sparring-partner`, `conductor` and the 0.2.0 badges
+(see "Effort policy" below) are not drawn yet.
 
 ![How the team works with you: eight skills share your session context; four subagents run isolated behind a context boundary; every role carries an effort badge set by its task shape](assets/team-map.svg)
 

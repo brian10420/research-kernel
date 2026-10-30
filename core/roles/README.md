@@ -22,6 +22,7 @@ spec text is the authority, the wrapper is a pointer.
 | [`repo-maintainer`](repo-maintainer.md) | **isolated** | git/GitHub with the never-push list | push protected content; forced push unasked |
 | [`sparring-partner`](sparring-partner.md) | **isolated** | premise audit of a decision before it is made: verdict, kill criteria, do-nothing option | veto; see the proposer's reasoning |
 | [`memory-curator`](memory-curator.md) | shared-context | janitor for the recall layer: route facts, audit memory against git, propose session-end distillation | gatekeep; edit `core/`; commit a scientific claim |
+| [`conductor`](conductor.md) | shared-context | run a multi-stage pipeline from the operator's session: dispatch each stage, read condensed returns, stop at named checkpoints with a decision dashboard, keep the tracker | do substantive work; skip a MANDATORY stop; override a HARD-STOP |
 
 **Posture** is the load-bearing design decision. *Shared-context* roles join
 the operator's session and see everything — discussion, design, revision,
@@ -53,6 +54,10 @@ sharing the operator's context, or from NOT sharing it?
 - **`sparring-partner` vs `blind-reviewer` vs `regression-guardian`:** three
   isolated checks of different objects — a decision or plan, a manuscript, a
   code change. The sparring partner advises; it never certifies or vetoes.
+- **`conductor` vs `research-mentor`:** one runs the pipeline (stages,
+  checkpoints, tracker) and does no substantive work; the other discusses the
+  research. The conductor wears the mentor's role, announced, for every
+  discussion turn.
 
 ## Hard rules baked into the team
 
@@ -100,6 +105,13 @@ DECISION_004).
 
 **Present:** verified numbers/figures (`results-analyst`) → brief + pre-flight
 scan + build (`science-presenter`) → for a defense, rehearse (`study-coach`).
+
+**Pipeline:** the overlay's stage order (`conductor`) → each stage dispatched
+to its role, workflow or script with the spec, the hash and the brief path →
+the stage's mechanical checks as scripts → a SLIM line, or a FULL / MANDATORY
+decision dashboard with the self-check line → the operator's choice → one
+tracker row per transition. Judgement turns in between are worn roles
+(`research-mentor`, `paper-writer`, …), announced.
 
 **Learn:** read the Study Log → one topic in three layers → quiz → update the log
 (`study-coach`).
